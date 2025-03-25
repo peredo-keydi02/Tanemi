@@ -32,13 +32,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.tanemi_j.ui.theme.auth.AuthViewModel
 import com.example.tanemi_j.R // Necesario para los recursos como imágenes
+import com.example.tanemi_j.ui.theme.Iansui
 import java.util.Locale
 
 
@@ -75,13 +78,14 @@ fun TraductorScreen(navController: NavHostController, authViewModel: AuthViewMod
         IconButton(
             onClick = { navController.popBackStack() },
             modifier = Modifier
-                .padding(start = 16.dp, top = 16.dp)
+                .padding(start = 26.dp, top = 40.dp)
                 .align(Alignment.TopStart)
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.regresar),
                 contentDescription = "Volver",
-                tint = Color.White
+                tint = Color.White,
+                modifier = Modifier.size(32.dp)
             )
         }
 
@@ -93,12 +97,16 @@ fun TraductorScreen(navController: NavHostController, authViewModel: AuthViewMod
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Escribe o usa el micrófono",
-                fontSize = 22.sp,
+                text = "Presione el microfono para comenzar",
+                fontSize = 32.sp,
+                textAlign = TextAlign.Center,
+                style = TextStyle(fontFamily = Iansui),
                 color = Color.White,
+                fontWeight = FontWeight.Normal,
                 modifier = Modifier.padding(bottom = 10.dp)
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
 //            // **TextField de Material Design para ingresar texto manualmente**
 //            OutlinedTextField(
 //                value = inputText,
@@ -116,8 +124,6 @@ fun TraductorScreen(navController: NavHostController, authViewModel: AuthViewMod
 //                    //TextColor = Color.White
 //                )
 //            )
-
-            Spacer(modifier = Modifier.height(10.dp))
 
             // **Ícono de micrófono con reconocimiento de voz**
             Box(

@@ -17,6 +17,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,33 +40,34 @@ import com.example.tanemi_j.R
 import com.example.tanemi_j.ui.theme.auth.AuthViewModel
 
 @Composable
-fun RecuperarContrasena(navController: NavController, authViewModel: AuthViewModel){
+fun RecuperarContrasena(navController: NavController, authViewModel: AuthViewModel) {
     var email by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
 
-    Box (
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFC2E8FF))
-            .padding(16.dp)
+            .padding(10.dp)
     ) {
+        // Botón de retroceso en la esquina superior izquierda
         IconButton(
-            onClick = { navController.navigate("login") },
+            onClick = { navController.popBackStack()  }, // Acción para volver atrás
             modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(start = 16.dp, top = 20.dp)
+                .padding(start = 16.dp, top = 30.dp)
+                .align(Alignment.TopStart) // Asegura que esté en la esquina superior izquierda
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.x),
-                contentDescription = "cancelar",
-                modifier = Modifier.size(24.dp)
+            Icon(
+                painter = painterResource(id = R.drawable.regresar),
+                contentDescription = "Regresar",
+                tint = Color(0xFF1C8ADB),
+                modifier = Modifier.size(32.dp)
             )
         }
 
+        // Contenido centrado
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xFFC2E8FF)),
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -82,20 +84,24 @@ fun RecuperarContrasena(navController: NavController, authViewModel: AuthViewMod
             ) {
                 Column {
                     RecuperarInputField("Ingresa un correo electrónico válido", email) { email = it }
-
                 }
             }
 
             if (errorMessage.isNotEmpty()) {
-                Text(text = errorMessage, color = Color.Red, fontSize = 18.sp, modifier = Modifier.padding(top = 8.dp))
+                Text(
+                    text = errorMessage,
+                    color = Color.Red,
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
             }
 
             Button(
                 onClick = {
-                    if (email.isNotBlank()) {
+                    if (email.isNotBlank() && esEmailValido(email)) {
                         navController.navigate("modificarcontrasena")
                     } else {
-                        errorMessage = "Por favor, introduzca su correo electrónico."
+                        errorMessage = "Por favor, introduzca su correo electrónico correctamente."
                     }
                 },
                 colors = ButtonDefaults.buttonColors(Color(0xFF42A5F5)),
@@ -103,10 +109,8 @@ fun RecuperarContrasena(navController: NavController, authViewModel: AuthViewMod
             ) {
                 Text(text = "Recuperar", fontSize = 22.sp)
             }
-
         }
     }
-
 }
 
 @Composable
