@@ -3,30 +3,28 @@ package com.example.tanemi_j.ui.theme.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.tanemi_j.R
 import com.example.tanemi_j.ui.theme.auth.AuthViewModel
-
 
 @Composable
 fun RegistroScreen(navController: NavHostController, viewModel: AuthViewModel) {
@@ -34,111 +32,98 @@ fun RegistroScreen(navController: NavHostController, viewModel: AuthViewModel) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-    var loading by remember { mutableStateOf(false) }
-    var errorMessage by remember { mutableStateOf("") } // 🔹 Estado para mostrar mensajes de error
+    var errorMessage by remember { mutableStateOf("") }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFC2E8FF))
-            .padding(16.dp)
-    ) {
-        // Botón de imagen en la esquina superior izquierda
-        IconButton(
-            onClick = { navController.navigate("login") },
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(start = 16.dp, top = 20.dp)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.x),
-                contentDescription = "cancelar",
-                modifier = Modifier.size(24.dp)
-            )
-        }
+    Box(modifier = Modifier.fillMaxSize()) {
+        // Imagen de fondo
+        Image(
+            painter = painterResource(id = R.drawable.ftanemi),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
 
-        Column(
+        // Contenido principal
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .align(Alignment.Center)
                 .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = "Bienvenido a Tanemí, Regístrate",
-                color = Color.Black,
-                fontSize = 32.sp,
-                modifier = Modifier.padding(bottom = 20.dp),
-                textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color(0xFF90CAF9), shape = RoundedCornerShape(10.dp))
-                    .border(3.dp, Color.White, RoundedCornerShape(10.dp))
-                    .padding(20.dp)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    RegistroInputField("Nombre", nombre) { nombre = it }
-                    RegistroInputField("Correo Electrónico", email, KeyboardType.Email) { email = it }
-                    RegistroInputField("Contraseña", password, isPassword = true) { password = it }
-                    RegistroInputField("Confirmar Contraseña", confirmPassword, isPassword = true) { confirmPassword = it }
-                }
-            }
+                Box(
+                    modifier = Modifier
+                        .background(
+                            color = Color(0xBBE0F7FF),
+                            shape = RoundedCornerShape(20.dp)
+                        )
+                        .padding(16.dp)
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            "Bienvenido a Tanemí",
+                            fontSize = 24.sp,
+                            color = Color.Black
+                        )
+                        Text(
+                            "Registro",
+                            fontSize = 22.sp,
+                            color = Color.Black,
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
 
-            // 🔹 Mensaje de error si hay problemas con el registro
-            if (errorMessage.isNotEmpty()) {
-                Text(
-                    text = errorMessage,
-                    color = Color.Red,
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-            }
+                        RegistroInputField("Nombre", nombre) { nombre = it }
+                        RegistroInputField("Correo Electrónico", email, KeyboardType.Email) { email = it }
+                        RegistroInputField("Contraseña", password, isPassword = true) { password = it }
+                        RegistroInputField("Confirmar Contraseña", confirmPassword, isPassword = true) { confirmPassword = it }
 
-            Spacer(modifier = Modifier.height(16.dp))
+                        if (errorMessage.isNotEmpty()) {
+                            Text(errorMessage, color = Color.Red, fontSize = 14.sp)
+                        }
 
-            Button(
-                onClick = {
-                    when {
-                        nombre.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank() ->
-                            errorMessage = "Debe llenar todos los campos."
-                        !esEmailValido(email) ->
-                            errorMessage = "Ingrese un correo electrónico válido."
-                        password.length < 8 ->
-                            errorMessage = "La contraseña debe tener al menos 8 caracteres."
-                        password != confirmPassword ->
-                            errorMessage = "Las contraseñas no coinciden."
-                        else -> {
-                            loading = true
-                            viewModel.registerUser(email, password, nombre,  // Agregar el parámetro "nombre"
-                                onSuccess = {
-                                    loading = false
-                                    navController.navigate("login")
-                                },
-                                onError = { msg ->
-                                    loading = false
-                                    errorMessage = msg
+                        // Botón con diseño de gradiente
+                        Box(
+                            modifier = Modifier
+                                .padding(top = 16.dp)
+                                .border(
+                                    width = 2.dp,
+                                    brush = Brush.horizontalGradient(
+                                        colors = listOf(Color(0xFF6C63FF), Color(0xFF03DAC5))
+                                    ),
+                                    shape = RoundedCornerShape(20.dp)
+                                )
+                                .padding(horizontal = 20.dp, vertical = 8.dp)
+                                .background(Color.Transparent, RoundedCornerShape(20.dp))
+                                .clickable {
+                                    if (nombre.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
+                                        errorMessage = "Todos los campos son obligatorios."
+                                    } else if (password != confirmPassword) {
+                                        errorMessage = "Las contraseñas no coinciden."
+                                    } else {
+                                        viewModel.registerUser(email, password, nombre, {
+                                            navController.navigate("login")
+                                        }, { msg ->
+                                            errorMessage = msg
+                                        })
+                                    }
                                 }
+                        ) {
+                            Text(
+                                text = "Registrarse",
+                                fontSize = 18.sp,
+                                color = Color(0xFF6C63FF),
+                                modifier = Modifier.align(Alignment.Center)
                             )
                         }
+
+                        TextButton(onClick = { navController.navigate("login") }) {
+                            Text("¿Ya tienes cuenta? Inicia sesión", color = Color.Blue)
+                        }
                     }
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
-                modifier = Modifier.padding(top = 20.dp)
-            ) {
-                Text("Registrar", color = Color.White, fontSize = 22.sp)
-            }
-
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            TextButton(onClick = { navController.navigate("login") },
-                modifier = Modifier.padding(top = 15.dp)) {
-                Text("Iniciar sesión", fontSize = 22.sp, color = Color(0xFF2196F3))
+                }
             }
         }
     }
@@ -158,8 +143,8 @@ fun RegistroInputField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 7.dp)
-                .background(Color.White, shape = RoundedCornerShape(10.dp)) // Solo 1 fondo
-                .padding(horizontal = 8.dp, vertical = 2.dp) // Padding interno
+                .background(Color.White, shape = RoundedCornerShape(10.dp))
+                .padding(horizontal = 8.dp, vertical = 2.dp)
         ) {
             BasicTextField(
                 value = value,
@@ -177,8 +162,3 @@ fun RegistroInputField(
         }
     }
 }
-
-fun esEmailValido(email: String): Boolean {
-    return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
-}
-

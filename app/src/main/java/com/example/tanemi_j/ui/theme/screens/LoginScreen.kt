@@ -41,7 +41,7 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
         modifier = Modifier.fillMaxSize()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.fondosinlogo),
+            painter = painterResource(id = R.drawable.ftanemi),
             contentDescription = "Fondo",
             modifier = Modifier.size(909.dp).align(Alignment.TopCenter),
             contentScale = ContentScale.Fit
@@ -154,6 +154,13 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
         }
     }
 }
+//AQUI PUSE ALGO
+// Función utilitaria para validar correos electrónicos
+fun esEmailValido(email: String): Boolean {
+    val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex()
+    return emailRegex.matches(email)
+}
+
 
 @Composable
 fun LoginInputField(
