@@ -190,3 +190,4 @@ fun TraductorScreen(navController: NavHostController, authViewModel: AuthViewMod
         }
     }
 }
+

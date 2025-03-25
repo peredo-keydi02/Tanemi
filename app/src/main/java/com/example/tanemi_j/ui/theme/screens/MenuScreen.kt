@@ -64,7 +64,7 @@ fun MenuScreen(navController: NavHostController, authViewModel: AuthViewModel) {
                     popUpTo("menu") { inclusive = true }
                 }
 
-                      },
+            },
             modifier = Modifier
                 .padding(start = 26.dp, top = 40.dp)
                 .align(Alignment.TopStart)
