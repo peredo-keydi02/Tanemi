@@ -27,8 +27,8 @@ private  val acme = FontFamily(
 // Set of Material typography styles to start with
 val Typography = Typography(
     titleLarge = TextStyle(
-        fontFamily = poppins,
-        fontWeight = FontWeight.Bold,
+        fontFamily = acme,
+        fontWeight = FontWeight.Normal,
         fontSize = 42.sp
     ),
     titleMedium = TextStyle(
@@ -40,11 +40,6 @@ val Typography = Typography(
         fontFamily = poppins,
         fontWeight = FontWeight.Light,
         fontSize = 32.sp
-    ),
-    bodyLarge = TextStyle(
-        fontFamily = acme,
-        fontWeight = FontWeight.Normal,
-        fontSize = 38.sp
     )
    /* bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,

@@ -23,12 +23,14 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.tanemi_j.R
+import com.example.tanemi_j.ui.theme.Iansui
 import com.example.tanemi_j.ui.theme.auth.AuthViewModel
 
 
@@ -90,7 +92,7 @@ fun MenuScreen(navController: NavHostController, authViewModel: AuthViewModel) {
 
             Text(
                 text = " Tanemí ",
-                style = MaterialTheme.typography.bodyLarge,
+                style = TextStyle(fontFamily = Iansui),
                 fontSize = 42.sp,
                 fontWeight = FontWeight.Normal,
                 color = Color.White,

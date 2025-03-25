@@ -40,6 +40,12 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
+        Image(
+            painter = painterResource(id = R.drawable.fondosinlogo),
+            contentDescription = "Fondo",
+            modifier = Modifier.size(909.dp).align(Alignment.TopCenter),
+            contentScale = ContentScale.Fit
+        )
 
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -47,30 +53,34 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Inicio de sesion",
+                text = "Inicio de sesión",
                 fontSize = 32.sp,
                 color = Color(0xFF1C8ADB),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth()
             )
-            // Imagen
+
             Image(
-                painter = painterResource(id = R.drawable.logocirculo ),
+                painter = painterResource(id = R.drawable.logocirculo),
                 contentDescription = "Logo",
                 modifier = Modifier.size(100.dp),
                 contentScale = ContentScale.Fit
             )
 
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
-                    .background(Color(0xFFC2E8FF), shape = RoundedCornerShape(10.dp)) // Fondo azul claro
+                    .background(
+                        Color(0x99C2E8FF),
+                        shape = RoundedCornerShape(10.dp)
+                    ) // Azul transparente
                     .padding(20.dp)
+            )
 
-            ) {
+
+            {
                 Column {
                     LoginInputField("Correo Electrónico", email) { email = it }
                     LoginInputField("Contraseña", password, isPassword = true) { password = it }
@@ -181,3 +191,4 @@ fun LoginInputField(
         }
     }
 }
+
