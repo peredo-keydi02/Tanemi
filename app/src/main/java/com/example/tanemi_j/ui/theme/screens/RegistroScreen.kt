@@ -58,9 +58,9 @@ fun RegistroScreen(navController: NavHostController, viewModel: AuthViewModel) {
                 .padding(start = 16.dp, top = 30.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.x),
+                painter = painterResource(id = R.drawable.regresar),
                 contentDescription = "cancelar",
-                modifier = Modifier.size(28.dp)
+                modifier = Modifier.size(32.dp)
             )
         }
 

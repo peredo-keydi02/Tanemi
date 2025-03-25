@@ -196,7 +196,8 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
                         text = "Iniciar sesión",
                         fontSize = 25.sp,
                         style = TextStyle(
-                            brush = Brush.horizontalGradient(listOf(Color(0xFF8A2BE2), Color(0xFF00BFFF)))
+                            brush = Brush.horizontalGradient(listOf(Color(0xFF8A2BE2), Color(0xFF00BFFF))),
+                            fontFamily = Iansui
                         ),
                         fontWeight = FontWeight.SemiBold
                     )
