@@ -144,7 +144,7 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
                     )
                 )
             }
-            TextButton(onClick = { /* Acción para recuperar contraseña */ }) {
+            TextButton(onClick = { navController.navigate("recuperarcontrasena") }) {
                 Text(text = "¿Olvidaste tu contraseña?", fontSize = 14.sp, color = Color(0xFF007AFF))
             }
             TextButton(onClick = { navController.navigate("registro") }) {
