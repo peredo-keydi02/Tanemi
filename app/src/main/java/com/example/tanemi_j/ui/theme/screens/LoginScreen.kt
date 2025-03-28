@@ -47,7 +47,7 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
 
     if (isClosing) {
         LaunchedEffect(Unit) {
-            delay(300) // Espera la animación antes de cerrar SPLASH
+            delay(300) // Espera la animación antes de cerrar SPLASH 
             activity?.finish()
         }
     }
