@@ -54,20 +54,24 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
 
     AnimatedVisibility(
         visible = !isClosing,
-        exit = scaleOut(animationSpec = tween(300), targetScale = 0.7f) + fadeOut(animationSpec = tween(300)) // 🔥 Nueva animación: Zoom Out + Fade
+        exit = scaleOut(animationSpec = tween(300), targetScale = 0.7f) + fadeOut(animationSpec = tween(300))
     ) {
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(10.dp)
         ) {
+            // Fondo de pantalla
             Image(
                 painter = painterResource(id = R.drawable.taemif),
                 contentDescription = "Fondo",
-                modifier = Modifier.size(909.dp).align(Alignment.TopCenter),
+                modifier = Modifier
+                    .size(909.dp)
+                    .align(Alignment.TopCenter),
                 contentScale = ContentScale.Fit
             )
 
-            // Botón de cierre con nueva animación
+            // Botón de cierre
             IconButton(
                 onClick = { isClosing = true },
                 modifier = Modifier
@@ -87,6 +91,7 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // Título de la pantalla
                 Text(
                     text = "Inicio de sesión",
                     fontSize = 32.sp,
@@ -99,15 +104,23 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Image(
-                    painter = painterResource(id = R.drawable.logocirculo),
-                    contentDescription = "Logo",
-                    modifier = Modifier.size(100.dp),
-                    contentScale = ContentScale.Fit
-                )
+                // Logo animado
+                AnimatedVisibility(
+                    visible = true,
+                    enter = scaleIn(animationSpec = tween(durationMillis = 1000)) +
+                            fadeIn(animationSpec = tween(durationMillis = 1000))
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.logocirculo),
+                        contentDescription = "Logo",
+                        modifier = Modifier.size(100.dp),
+                        contentScale = ContentScale.Fit
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Contenedor de entrada
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -160,7 +173,7 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
                     onClick = {
                         when {
                             email.isBlank() ->
-                                errorMessage = "Introduzca su correo eletroónico, por favor."
+                                errorMessage = "Introduzca su correo electrónico, por favor."
                             !esEmailValido(email) ->
                                 errorMessage = "El correo ingresado es incorrecto, intente de nuevo, por favor."
                             password.isBlank() ->
