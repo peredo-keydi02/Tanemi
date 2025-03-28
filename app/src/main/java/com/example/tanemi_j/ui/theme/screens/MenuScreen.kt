@@ -31,6 +31,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.tanemi_j.R
 import com.example.tanemi_j.ui.theme.Iansui
+import com.example.tanemi_j.ui.theme.PoppinsBold
+import com.example.tanemi_j.ui.theme.PoppinsNormal
 import com.example.tanemi_j.ui.theme.auth.AuthViewModel
 
 
@@ -45,6 +47,7 @@ fun MenuScreen(navController: NavHostController, authViewModel: AuthViewModel) {
     Box(
         modifier = Modifier
             .fillMaxSize()
+
     ) {
         // Imagen de fondo
         Image(
@@ -61,9 +64,9 @@ fun MenuScreen(navController: NavHostController, authViewModel: AuthViewModel) {
                     popUpTo("menu") { inclusive = true }
                 }
 
-                      },
+            },
             modifier = Modifier
-                .padding(start = 30.dp, top = 35.dp)
+                .padding(start = 26.dp, top = 40.dp)
                 .align(Alignment.TopStart)
         ) {
             Image(
@@ -82,7 +85,7 @@ fun MenuScreen(navController: NavHostController, authViewModel: AuthViewModel) {
         ) {
             Text(
                 text = "Bienvenido a",
-                style = MaterialTheme.typography.titleSmall,
+                style = TextStyle(fontFamily = PoppinsNormal),
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Normal,
                 color = Color(0xFFA2C9FE),
@@ -110,7 +113,7 @@ fun MenuScreen(navController: NavHostController, authViewModel: AuthViewModel) {
 
             Text(
                 text = "¿Cómo puedo ayudarte $userName?",
-                style = MaterialTheme.typography.titleSmall,
+                style = TextStyle(fontFamily = PoppinsNormal),
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Normal,
                 color = Color.White,
@@ -124,7 +127,6 @@ fun MenuScreen(navController: NavHostController, authViewModel: AuthViewModel) {
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 10.dp)
                     .height(65.dp)
             ) {
                 Box(
@@ -142,9 +144,10 @@ fun MenuScreen(navController: NavHostController, authViewModel: AuthViewModel) {
                     contentAlignment = Alignment.Center
                 )
                 {
-                    Text("Traducir idioma", fontSize = 25.sp,
-                        fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.titleLarge, color = Color.White)
+                    Text("Traducir idioma", fontSize = 23.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        style = TextStyle(fontFamily = PoppinsBold),
+                        color = Color.White)
                 }
             }
 
@@ -156,7 +159,6 @@ fun MenuScreen(navController: NavHostController, authViewModel: AuthViewModel) {
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 10.dp)
                     .height(65.dp)
             ) {
                 Box(
@@ -174,9 +176,10 @@ fun MenuScreen(navController: NavHostController, authViewModel: AuthViewModel) {
                     contentAlignment = Alignment.Center
                 )
                 {
-                    Text("Vincular con smartwatch", fontSize = 25.sp,
-                        fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.titleLarge, color = Color.White)
+                    Text("Vincular con smartwatch", fontSize = 23.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        style = TextStyle(fontFamily = PoppinsBold),
+                        color = Color.White)
                 }
             }
         }

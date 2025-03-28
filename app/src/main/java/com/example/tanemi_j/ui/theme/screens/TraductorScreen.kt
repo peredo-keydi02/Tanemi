@@ -3,60 +3,54 @@ package com.example.tanemi_j.ui.theme.screens
 import android.app.Activity
 import android.content.Intent
 import android.speech.RecognizerIntent
-import android.speech.tts.TextToSpeech
-import android.speech.tts.TextToSpeech.OnInitListener
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.tanemi_j.ui.theme.auth.AuthViewModel
 import com.example.tanemi_j.R // Necesario para los recursos como imágenes
-import com.google.mlkit.nl.translate.TranslateLanguage
-import com.google.mlkit.nl.translate.Translator
-import com.google.mlkit.nl.translate.TranslatorOptions
-import com.google.mlkit.nl.translate.Translation
+import com.example.tanemi_j.ui.theme.Iansui
 import java.util.Locale
+
 
 @Composable
 fun TraductorScreen(navController: NavHostController, authViewModel: AuthViewModel) {
     var inputText by remember { mutableStateOf(TextFieldValue("")) }
     var translatedText by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
-    var detectedLanguage by remember { mutableStateOf("Español") }
-    var targetLanguageText by remember { mutableStateOf("Inglés") }
 
-    // Detectar el idioma del texto ingresado (esto podría hacerse con alguna librería o API)
-    val sourceLanguage = if (detectedLanguage == "Español") TranslateLanguage.SPANISH else TranslateLanguage.ENGLISH
-    val targetLanguage = if (detectedLanguage == "Español") TranslateLanguage.ENGLISH else TranslateLanguage.SPANISH
-    val options = TranslatorOptions.Builder()
-        .setSourceLanguage(sourceLanguage)
-        .setTargetLanguage(targetLanguage)
-        .build()
-    val translator = Translation.getClient(options)
-
-    // Declaración de TextToSpeech
-    val context = LocalContext.current // Aquí obtenemos el contexto dentro del composable
-    var textToSpeech: TextToSpeech? by remember { mutableStateOf(null) }
-
-    // Configuración de speech recognizer
     val speechRecognizerLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -64,37 +58,36 @@ fun TraductorScreen(navController: NavHostController, authViewModel: AuthViewMod
                 val spokenText = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.get(0)
                 if (spokenText != null) {
                     inputText = TextFieldValue(spokenText)
-                    detectedLanguage = if (Locale.getDefault().language == "es") "Español" else "Inglés"
-                    targetLanguageText = if (detectedLanguage == "Español") "Inglés" else "Español"
                 }
             }
         }
 
-    // Inicialización de TextToSpeech dentro de DisposableEffect
-    DisposableEffect(context) {
-        textToSpeech = TextToSpeech(context) { status ->
-            if (status == TextToSpeech.SUCCESS) {
-                textToSpeech?.language = Locale.US // Configuración por defecto en inglés
-            } else {
-                Toast.makeText(context, "Error al inicializar TTS", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        // Liberar los recursos de TextToSpeech cuando el composable sea destruido
-        onDispose {
-            textToSpeech?.stop()
-            textToSpeech?.shutdown()
-        }
-    }
-
-    // La UI de la pantalla
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        // Imagen de fondo
         Image(
             painter = painterResource(id = R.drawable.fondosinlogo),
             contentDescription = "Fondo de la pantalla",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
+
+        // Botón de retroceso en la esquina superior izquierda
+        IconButton(
+            onClick = { navController.popBackStack() },
+            modifier = Modifier
+                .padding(start = 26.dp, top = 40.dp)
+                .align(Alignment.TopStart)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.regresar),
+                contentDescription = "Volver",
+                tint = Color.White,
+                modifier = Modifier.size(32.dp)
+            )
+        }
 
         Column(
             modifier = Modifier
@@ -104,14 +97,35 @@ fun TraductorScreen(navController: NavHostController, authViewModel: AuthViewMod
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Escribe o usa el micrófono",
-                fontSize = 22.sp,
+                text = "Presione el microfono para comenzar",
+                fontSize = 32.sp,
+                textAlign = TextAlign.Center,
+                style = TextStyle(fontFamily = Iansui),
                 color = Color.White,
+                fontWeight = FontWeight.Normal,
                 modifier = Modifier.padding(bottom = 10.dp)
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+//            // **TextField de Material Design para ingresar texto manualmente**
+//            OutlinedTextField(
+//                value = inputText,
+//                onValueChange = { inputText = it },
+//                label = { Text("Ingresa texto") },
+//                textStyle = LocalTextStyle.current.copy(color = Color.White),
+//                singleLine = true,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(bottom = 20.dp),
+//                colors = TextFieldDefaults.outlinedTextFieldColors(
+//                    focusedBorderColor = Color.White,
+//                    unfocusedBorderColor = Color.LightGray,
+//                    cursorColor = Color.White,
+//                    //TextColor = Color.White
+//                )
+//            )
 
+            // **Ícono de micrófono con reconocimiento de voz**
             Box(
                 modifier = Modifier
                     .size(100.dp)
@@ -137,19 +151,13 @@ fun TraductorScreen(navController: NavHostController, authViewModel: AuthViewMod
 
             Spacer(modifier = Modifier.height(40.dp))
 
+            // **Botón para traducir**
             ElevatedButton(
                 onClick = {
                     if (inputText.text.isNotBlank()) {
-                        // Traducir el texto usando ML Kit
-                        translator.translate(inputText.text)
-                            .addOnSuccessListener { translated ->
-                                translatedText = translated
-                                // Usar TextToSpeech para leer la traducción
-                                textToSpeech?.speak(translated, TextToSpeech.QUEUE_FLUSH, null, null)
-                            }
-                            .addOnFailureListener { exception ->
-                                errorMessage = "Error al traducir: ${exception.message}"
-                            }
+                        authViewModel.originalText.value = inputText.text
+                        translatedText = "Traducción simulada de: ${inputText.text}"
+                        authViewModel.translatedText.value = translatedText
                     } else {
                         errorMessage = "Ingresa una palabra para traducir"
                     }
@@ -164,10 +172,9 @@ fun TraductorScreen(navController: NavHostController, authViewModel: AuthViewMod
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Mostrar la traducción y el idioma
             if (translatedText.isNotEmpty()) {
                 Text(
-                    text = "Traducción: $translatedText\nIdioma: $targetLanguageText",
+                    text = "Traducción: $translatedText",
                     fontSize = 20.sp,
                     color = Color.White
                 )
