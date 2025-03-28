@@ -39,106 +39,112 @@ import com.example.tanemi_j.R
 import com.example.tanemi_j.ui.theme.auth.AuthViewModel
 
 @Composable
-fun RecuperarContrasena(navController: NavController, authViewModel: AuthViewModel){
+fun RecuperarContrasena(navController: NavController, authViewModel: AuthViewModel) {
     var email by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
 
-    Box (
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFC2E8FF))
+            .background(Color.White)
             .padding(16.dp)
     ) {
         IconButton(
             onClick = { navController.navigate("login") },
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(start = 16.dp, top = 20.dp)
+            modifier = Modifier.align(Alignment.TopStart)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.x),
-                contentDescription = "cancelar",
+                contentDescription = "Cancelar",
                 modifier = Modifier.size(24.dp)
             )
         }
 
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xFFC2E8FF)),
-            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(30.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "¿No recuerdas tu contraseña?", fontSize = 32.sp, color = Color.Black)
-            Spacer(modifier = Modifier.height(16.dp))
+            Image(
+                painter = painterResource(id = R.drawable.logocirculo),
+                contentDescription = "Logo",
+                modifier = Modifier.size(120.dp)
+            )
+
+            Text(text = "¿No recuerdas tu contraseña?", fontSize = 27.sp, color = Color(0xFF6C63FF))
 
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .background(Color(0xFF90CAF9), shape = RoundedCornerShape(10.dp))
-                    .border(3.dp, Color.White, RoundedCornerShape(10.dp))
+                    .fillMaxWidth(0.95f)
+                    .height(140.dp)  // Cuadro azul más grande
+                    .background(Color(0xFFD2EBFF), shape = RoundedCornerShape(15.dp))
+                    .border(2.dp, Color.White, RoundedCornerShape(15.dp))
                     .padding(20.dp)
             ) {
                 Column {
-                    RecuperarInputField("Ingresa un correo electrónico válido", email) { email = it }
-
+                    RecuperarInputField("Ingresa tu correo válido", email) { email = it }
                 }
             }
 
             if (errorMessage.isNotEmpty()) {
-                Text(text = errorMessage, color = Color.Red, fontSize = 18.sp, modifier = Modifier.padding(top = 8.dp))
+                Text(
+                    text = errorMessage,
+                    color = Color.Red,
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
             }
+
+            Spacer(modifier = Modifier.height(20.dp)) // Separa más el botón
 
             Button(
                 onClick = {
                     if (email.isNotBlank()) {
                         navController.navigate("modificarcontrasena")
                     } else {
-                        errorMessage = "Por favor, introduzca su correo electrónico."
+                        errorMessage = "Por favor, ingresa tu correo electrónico."
                     }
                 },
-                colors = ButtonDefaults.buttonColors(Color(0xFF42A5F5)),
-                modifier = Modifier.padding(top = 15.dp)
+                colors = ButtonDefaults.buttonColors(Color.White),
+                modifier = Modifier
+                    .padding(top = 15.dp)
+                    .border(2.dp, Color(0xFF6C63FF), RoundedCornerShape(20.dp))
+                    .padding(horizontal = 20.dp, vertical = 8.dp)
             ) {
-                Text(text = "Recuperar", fontSize = 22.sp)
+                Text(text = "Recuperar", fontSize = 18.sp, color = Color(0xFF6C63FF))
             }
-
         }
     }
-
 }
 
 @Composable
 fun RecuperarInputField(
     label: String,
     value: String,
-    keyboardType: KeyboardType = KeyboardType.Text,
-    isPassword: Boolean = false,
+    keyboardType: KeyboardType = KeyboardType.Email,
     onValueChange: (String) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(text = label, fontSize = 22.sp, color = Color.Black, modifier = Modifier.padding(top = 10.dp))
+        Text(text = label, fontSize = 18.sp, color = Color.Black) // Texto en negro
+        Spacer(modifier = Modifier.height(5.dp))
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 7.dp)
-                .background(Color.White, shape = RoundedCornerShape(10.dp)) // Solo 1 fondo
-                .padding(horizontal = 8.dp, vertical = 2.dp) // Padding interno
+                .background(Color.White, shape = RoundedCornerShape(10.dp))
+                .border(2.dp, Color.Black, RoundedCornerShape(10.dp))
+                .padding(horizontal = 12.dp, vertical = 14.dp)
         ) {
             BasicTextField(
                 value = value,
                 onValueChange = onValueChange,
                 textStyle = androidx.compose.ui.text.TextStyle(
-                    fontSize = 20.sp,
+                    fontSize = 18.sp,
                     color = Color.Black
                 ),
                 keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-                visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }
 }
+

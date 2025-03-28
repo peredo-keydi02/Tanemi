@@ -41,7 +41,7 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
         modifier = Modifier.fillMaxSize()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.fondosinlogo),
+            painter = painterResource(id = R.drawable.ftanemi),
             contentDescription = "Fondo",
             modifier = Modifier.size(909.dp).align(Alignment.TopCenter),
             contentScale = ContentScale.Fit
