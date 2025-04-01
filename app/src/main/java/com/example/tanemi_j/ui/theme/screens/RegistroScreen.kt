@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
@@ -17,13 +20,18 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.tanemi_j.R
+import com.example.tanemi_j.ui.theme.Iansui
+import com.example.tanemi_j.ui.theme.PoppinsNormal
 import com.example.tanemi_j.ui.theme.auth.AuthViewModel
 
 @Composable
@@ -33,6 +41,8 @@ fun RegistroScreen(navController: NavHostController, viewModel: AuthViewModel) {
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
+    var loading by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         // Imagen de fondo
@@ -98,16 +108,28 @@ fun RegistroScreen(navController: NavHostController, viewModel: AuthViewModel) {
                                 .padding(horizontal = 20.dp, vertical = 8.dp)
                                 .background(Color.Transparent, RoundedCornerShape(20.dp))
                                 .clickable {
-                                    if (nombre.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
-                                        errorMessage = "Todos los campos son obligatorios."
-                                    } else if (password != confirmPassword) {
-                                        errorMessage = "Las contraseñas no coinciden."
-                                    } else {
-                                        viewModel.registerUser(email, password, nombre, {
-                                            navController.navigate("login")
-                                        }, { msg ->
-                                            errorMessage = msg
-                                        })
+                                    when {
+                                        nombre.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank() ->
+                                            errorMessage = "Debe llenar todos los campos."
+                                        !esEmailValido(email) ->
+                                            errorMessage = "Ingrese un correo electrónico válido."
+                                        password.length < 8 ->
+                                            errorMessage = "La contraseña debe tener al menos 8 caracteres."
+                                        password != confirmPassword ->
+                                            errorMessage = "Las contraseñas no coinciden."
+                                        else -> {
+                                            loading = true
+                                            viewModel.registerUser(email, password, nombre,
+                                                onSuccess = {
+                                                    loading = false
+                                                    showDialog = true
+                                                },
+                                                onError = { msg ->
+                                                    loading = false
+                                                    errorMessage = msg
+                                                }
+                                            )
+                                        }
                                     }
                                 }
                         ) {
@@ -123,6 +145,61 @@ fun RegistroScreen(navController: NavHostController, viewModel: AuthViewModel) {
                             Text("¿Ya tienes cuenta? Inicia sesión", color = Color.Blue)
                         }
                     }
+                }
+                if (showDialog) {
+                    AlertDialog(
+                        onDismissRequest = { /* No cerrar con clic afuera */ },
+                        title = {
+                            Text(
+                                text = "Registro exitoso",
+                                fontSize = 32.sp, // Tamaño de letra grande
+                                fontWeight = FontWeight.SemiBold,
+                                style = TextStyle(
+                                    brush = Brush.horizontalGradient(listOf(Color(0xFF8A2BE2), Color(0xFF00BFFF))),
+                                    fontFamily = Iansui
+                                ),
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth().padding(bottom = 15.dp)// Color del texto
+                            )
+                        },
+                        text = {
+                            Text(
+                                text = "¡Su cuenta ha sido creada! Por favor, inicie sesión.",
+                                fontSize = 22.sp, // Tamaño del texto
+                                style = TextStyle(fontFamily = PoppinsNormal), // Fuente sans-serif
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Normal,// Centrar el texto
+                                color = Color(0xFF1C8ADB),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        },
+                        confirmButton = {
+                            Button(
+                                onClick = {
+                                    showDialog = false
+                                    navController.navigate("login") // Redirige al login
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent), // Fondo azul
+                                modifier = Modifier
+                                    .padding(top = 15.dp)
+                                    .height(50.dp)
+                                    .wrapContentWidth()
+                                    .border(2.dp, Brush.horizontalGradient(listOf(Color(0xFF8A2BE2), Color(0xFF00BFFF))), RoundedCornerShape(50.dp))
+                            ) {
+                                Text(
+                                    text = "Aceptar",
+                                    fontSize = 22.sp, // Tamaño de letra más grande
+                                    fontWeight = FontWeight.SemiBold, // Negrita
+                                    style = TextStyle(
+                                        brush = Brush.horizontalGradient(listOf(Color(0xFF8A2BE2), Color(0xFF00BFFF))),
+                                        fontFamily = Iansui
+                                    ) // Texto blanco
+                                )
+                            }
+                        },
+                        containerColor = Color.White, // Fondo del diálogo azul claro
+                        shape = RoundedCornerShape(16.dp) // Bordes redondeados del cuadro de diálogo
+                    )
                 }
             }
         }
