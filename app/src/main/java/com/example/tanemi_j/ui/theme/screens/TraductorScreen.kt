@@ -19,14 +19,20 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.tanemi_j.R
+import com.example.tanemi_j.ui.theme.Iansui
+import com.example.tanemi_j.ui.theme.PoppinsBold
 import com.example.tanemi_j.ui.theme.auth.AuthViewModel
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translator
@@ -88,6 +94,20 @@ fun TraductorScreen(navController: NavHostController, authViewModel: AuthViewMod
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
+        // Botón de retroceso en la esquina superior izquierda
+        IconButton(
+            onClick = { navController.popBackStack() },
+            modifier = Modifier
+                .padding(start = 26.dp, top = 40.dp)
+                .align(Alignment.TopStart)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.regresar),
+                contentDescription = "Volver",
+                tint = Color.White,
+                modifier = Modifier.size(32.dp)
+            )
+        }
 
         Column(
             modifier = Modifier
@@ -97,9 +117,12 @@ fun TraductorScreen(navController: NavHostController, authViewModel: AuthViewMod
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Escribe o usa el micrófono",
-                fontSize = 22.sp,
+                text = "Presione el microfono para comenzar",
+                fontSize = 32.sp,
+                textAlign = TextAlign.Center,
+                style = TextStyle(fontFamily = Iansui),
                 color = Color.White,
+                fontWeight = FontWeight.Normal,
                 modifier = Modifier.padding(bottom = 10.dp)
             )
 
@@ -147,22 +170,46 @@ fun TraductorScreen(navController: NavHostController, authViewModel: AuthViewMod
                         errorMessage = "Ingresa una palabra para traducir"
                     }
                 },
+                //colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF8A2BE2)),
+                //shape = RoundedCornerShape(30.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 32.dp)
-                    .clip(RoundedCornerShape(16.dp))
-            ) {
-                Text("Traducir", fontSize = 18.sp)
+                    .height(65.dp)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(
+                                Color(0xFF8C52FF),
+                                Color(0xFF5CE1E6)
+                            )
+                        ),
+                        shape = RoundedCornerShape(25.dp)
+                    ),
+
+                ) {
+                Text("Traducir",fontSize = 23.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    style = TextStyle(fontFamily = PoppinsBold),
+                    color = Color.White)
             }
+
 
             Spacer(modifier = Modifier.height(20.dp))
 
             if (translatedText.isNotEmpty()) {
                 Box(
                     modifier = Modifier
-                        .padding(top = 16.dp)
-                        .background(Color.Gray.copy(alpha = 0.3f), shape = RoundedCornerShape(10.dp))
-                        .padding(16.dp)
+                        .fillMaxSize()
+                        .background(
+                            brush = Brush.horizontalGradient(
+                                colors = listOf(
+                                    Color(0xFF8C52FF),
+                                    Color(0xFF5CE1E6)
+                                )
+                            ),
+                            shape = RoundedCornerShape(25.dp)
+                        ),
+                    contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = "Traducción: $translatedText",
