@@ -68,6 +68,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
 
     implementation ("com.google.firebase:firebase-messaging:23.1.0")
+    implementation ("androidx.work:work-runtime-ktx:2.8.1")
     implementation(libs.androidx.core.ktx)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
