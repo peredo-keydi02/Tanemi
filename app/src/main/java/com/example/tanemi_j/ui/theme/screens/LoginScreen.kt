@@ -206,12 +206,11 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 ) {
                     Text(
-                        text = "Iniciar sesión",
-                        fontSize = 25.sp,
+                        text = "Iniciar sesión", fontSize = 25.sp, fontWeight = FontWeight.SemiBold,
                         style = TextStyle(
-                            brush = Brush.horizontalGradient(listOf(Color(0xFF8A2BE2), Color(0xFF00BFFF)))
-                        ),
-                        fontWeight = FontWeight.SemiBold
+                            brush = Brush.horizontalGradient(listOf(Color(0xFF8A2BE2), Color(0xFF00BFFF))),
+                            fontFamily = Iansui
+                        )
                     )
                 }
 
@@ -248,21 +247,16 @@ fun LoginInputField(
     onValueChange: (String) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = label,
-            style = TextStyle(fontFamily = PoppinsNormal),
-            fontWeight = FontWeight.Bold,
-            fontSize = 22.sp,
-            color = Color(0xFF155DC0),
-            modifier = Modifier.padding(top = 10.dp)
-        )
+        Text(text = label, style = TextStyle(fontFamily = PoppinsNormal), fontWeight = FontWeight.SemiBold, fontSize = 22.sp, color = Color(0xFF1B72B3), modifier = Modifier.padding(top = 10.dp))
+
 
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 7.dp)
-                .background(Color(0x99FFFFFF), shape = RoundedCornerShape(10.dp))
-                .padding(horizontal = 8.dp, vertical = 2.dp)
+                .background(Color.White, shape = RoundedCornerShape(10.dp)) // Solo 1 fondo
+                .padding(horizontal = 8.dp, vertical = 2.dp) // Padding interno
+
         ) {
             BasicTextField(
                 value = value,
