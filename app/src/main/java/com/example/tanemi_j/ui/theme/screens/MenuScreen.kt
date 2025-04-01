@@ -1,6 +1,7 @@
 package com.example.tanemi_j.ui.theme.screens
 
 import android.graphics.Paint.Align
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -34,6 +35,7 @@ import com.example.tanemi_j.ui.theme.Iansui
 import com.example.tanemi_j.ui.theme.PoppinsBold
 import com.example.tanemi_j.ui.theme.PoppinsNormal
 import com.example.tanemi_j.ui.theme.auth.AuthViewModel
+import com.google.firebase.messaging.FirebaseMessaging
 
 
 @Composable
@@ -154,7 +156,21 @@ fun MenuScreen(navController: NavHostController, authViewModel: AuthViewModel) {
             Spacer(modifier = Modifier.height(25.dp))
 
             Button(
-                onClick = { /* TODO */ },
+                onClick = {
+                    fun getDeviceToken() {
+                        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                            if (!task.isSuccessful) {
+                                Log.w("FCM", "Obtener token falló", task.exception)
+                                return@addOnCompleteListener
+                            }
+
+                            val token = task.result
+                            Log.d("FCM", "Token: $token")
+
+                            // Aquí puedes guardar el token en tu base de datos
+                        }
+                    }
+                },
                 shape = RoundedCornerShape(30.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 modifier = Modifier

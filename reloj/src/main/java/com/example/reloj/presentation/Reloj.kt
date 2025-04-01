@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -40,7 +41,12 @@ import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import androidx.wear.tooling.preview.devices.WearDevices
 import com.example.reloj.R
+import com.example.reloj.presentation.theme.Auth.AuthViewModelFactory
+import com.example.reloj.presentation.theme.Auth.AuthViewModelR
+import com.example.reloj.presentation.theme.Auth.UserR
+import com.example.reloj.presentation.theme.Screens.AppNavigationR
 import com.example.reloj.presentation.theme.Tanemi_JTheme
+import com.google.firebase.auth.FirebaseAuth
 
 class Reloj : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,71 +57,12 @@ class Reloj : ComponentActivity() {
         setTheme(android.R.style.Theme_DeviceDefault)
 
         setContent {
-            WearAppNavigation()
+            val userR = UserR(FirebaseAuth.getInstance())
+            val authViewModelFactory = AuthViewModelFactory(userR)
+            val authViewModelR = ViewModelProvider(this, authViewModelFactory).get(AuthViewModelR::class.java)
+
+            // Aquí usas el ViewModel como lo necesites
+            AppNavigationR(authViewModelR)
         }
-    }
-}
-
-@Composable
-fun WearAppNavigation() {
-    val navController = rememberSwipeDismissableNavController()
-
-    NavHost(navController, startDestination = "login") {
-        composable("login") { WearLoginScreen(navController) }
-        composable("menu") { WearMenuScreen(navController) }
-        composable("traductor") { WearTranslatorScreen(navController) }
-    }
-}
-
-@Composable
-fun WearLoginScreen(navController: NavHostController) {
-    // Usamos remember y mutableStateOf para manejar el estado
-    val username = remember { mutableStateOf("") }
-    val password = remember { mutableStateOf("") }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Login", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
-        Spacer(modifier = Modifier.height(8.dp))
-        // Usamos .value para acceder al estado de las variables
-        TextField(value = username.value, onValueChange = { username.value = it }, label = { Text("Usuario") })
-        TextField(value = password.value, onValueChange = { password.value = it }, label = { Text("Contraseña") })
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = { navController.navigate("menu") }) { Text("Ingresar") }
-    }
-}
-
-@Composable
-fun WearMenuScreen(navController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Menú", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = { navController.navigate("traductor") }) { Text("Traductor") }
-    }
-}
-
-@Composable
-fun WearTranslatorScreen(navController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Traduciendo...", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = { navController.popBackStack() }) { Text("Volver") }
     }
 }

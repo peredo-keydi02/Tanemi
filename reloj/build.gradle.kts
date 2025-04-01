@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -54,6 +56,19 @@ dependencies {
     implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.storage)
     implementation(libs.androidx.material3.android)
+
+    implementation(platform("com.google.firebase:firebase-bom:33.10.0"))
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-database-ktx")
+
+    implementation ("at.favre.lib:bcrypt:0.9.0")
+    implementation("androidx.compose.material3:material3:1.2.0") // O la versión que estés usando
+    implementation ("androidx.compose.ui:ui-text:1.3.0")
+
+    implementation("com.google.firebase:firebase-analytics")
+
+    implementation ("com.google.firebase:firebase-messaging:23.1.0")
+    implementation(libs.androidx.core.ktx)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
