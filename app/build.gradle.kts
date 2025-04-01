@@ -10,6 +10,8 @@ android {
     namespace = "com.example.tanemi_j"
     compileSdk = 35
 
+
+
     defaultConfig {
         applicationId = "com.example.tanemi_j"
         minSdk = 27
@@ -29,6 +31,8 @@ android {
             )
         }
     }
+
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -69,6 +73,8 @@ dependencies {
 
     //Material design
     implementation("androidx.compose.material3:material3:1.2.0")
+
+    implementation ("com.google.firebase:firebase-messaging:23.1.0")
 
     implementation(libs.androidx.lifecycle.viewmodel.android)
     implementation(libs.androidx.lifecycle.viewmodel.android)
