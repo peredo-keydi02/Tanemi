@@ -199,17 +199,9 @@ fun TraductorScreen(navController: NavHostController, authViewModel: AuthViewMod
             if (translatedText.isNotEmpty()) {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            brush = Brush.horizontalGradient(
-                                colors = listOf(
-                                    Color(0xFF8C52FF),
-                                    Color(0xFF5CE1E6)
-                                )
-                            ),
-                            shape = RoundedCornerShape(25.dp)
-                        ),
-                    contentAlignment = Alignment.Center
+                        .padding(top = 16.dp)
+                        .background(Color.Gray.copy(alpha = 0.3f), shape = RoundedCornerShape(10.dp))
+                        .padding(16.dp)
                 ) {
                     Text(
                         text = "Traducción: $translatedText",
