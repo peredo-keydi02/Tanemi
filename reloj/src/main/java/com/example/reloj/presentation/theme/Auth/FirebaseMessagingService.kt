@@ -19,7 +19,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             // Aquí muestra la notificación con NotificationManager
         }
     }
+ keydi-reloj
     //lloremos juntos
+
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
@@ -28,4 +30,4 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // Por ejemplo, guardarlo en Firebase Realtime Database
     }
 }
-
+ keydi-reloj
