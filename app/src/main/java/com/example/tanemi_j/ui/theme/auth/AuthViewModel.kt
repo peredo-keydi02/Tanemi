@@ -3,6 +3,7 @@ package com.example.tanemi_j.ui.theme.auth
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -52,6 +53,14 @@ class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
         userRepository.logoutUser() // Llamamos al repositorio para cerrar sesión en Firebase
         _userName.value = ""  // Limpiamos el nombre de usuario
     }
+    ///funcion para mandar correo
+    fun enviarCorreoRecuperacion(email: String, callback: (Boolean) -> Unit) {
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                callback(task.isSuccessful)
+            }
+    }
+
 
     fun fetchUserName() {
         userRepository.getCurrentUserName { name ->
