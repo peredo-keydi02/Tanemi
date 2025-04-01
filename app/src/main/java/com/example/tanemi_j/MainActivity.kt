@@ -1,7 +1,9 @@
 package com.example.tanemi_j
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -35,6 +37,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             AppNavigation(authViewModel = authViewModel, textToSpeech = textToSpeech)
         }
+
     }
 
     override fun onDestroy() {
