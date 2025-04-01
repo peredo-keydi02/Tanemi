@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "932840111042",
+    "firebase_url": "https://tanemi-970cb-default-rtdb.firebaseio.com",
+    "project_id": "tanemi-970cb",
+    "storage_bucket": "tanemi-970cb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932840111042:android:050088e0141fba2ee1f45b",
+        "android_client_info": {
+          "package_name": "com.example.reloj"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqS8eyJ_MxlkPSnSa-YQ3uzJLG2vMqDWY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932840111042:android:b7d11a175cf0f006e1f45b",
+        "android_client_info": {
+          "package_name": "com.example.tanemi_j"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqS8eyJ_MxlkPSnSa-YQ3uzJLG2vMqDWY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

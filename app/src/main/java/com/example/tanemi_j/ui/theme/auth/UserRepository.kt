@@ -1,5 +1,6 @@
 package com.example.tanemi_j.ui.theme.auth
 
+import android.util.Log
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -36,6 +37,22 @@ class UserRepository(private val firebaseAuth: FirebaseAuth) {
                 }
             }
     }
+
+    fun saveUserToken(token: String) {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        currentUser?.let {
+            // Suponiendo que tienes una estructura en la base de datos como /users/{userId}/fcmToken
+            val userId = it.uid
+            db.child("users").child(userId).child("fcmToken").setValue(token)
+                .addOnSuccessListener {
+                    Log.d("UserRepository", "Token guardado exitosamente")
+                }
+                .addOnFailureListener { exception ->
+                    Log.w("UserRepository", "Error al guardar token: ${exception.message}")
+                }
+        }
+    }
+
 
     //  Función para verificar la contraseña encriptada manualmente
     fun verificarContraseña(contraseñaIngresada: String, contraseñaAlmacenada: String): Boolean {
