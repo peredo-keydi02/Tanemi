@@ -47,27 +47,31 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
 
     if (isClosing) {
         LaunchedEffect(Unit) {
-            delay(300) // Espera la animación antes de cerrar
+            delay(300) // Espera la animación antes de cerrar SPLASH 
             activity?.finish()
         }
     }
 
     AnimatedVisibility(
         visible = !isClosing,
-        exit = scaleOut(animationSpec = tween(300), targetScale = 0.7f) + fadeOut(animationSpec = tween(300)) // 🔥 Nueva animación: Zoom Out + Fade
+        exit = scaleOut(animationSpec = tween(300), targetScale = 0.7f) + fadeOut(animationSpec = tween(300))
     ) {
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(10.dp)
         ) {
+            // Fondo de pantalla
             Image(
                 painter = painterResource(id = R.drawable.taemif),
                 contentDescription = "Fondo",
-                modifier = Modifier.size(909.dp).align(Alignment.TopCenter),
+                modifier = Modifier
+                    .size(909.dp)
+                    .align(Alignment.TopCenter),
                 contentScale = ContentScale.Fit
             )
 
-            // Botón de cierre con nueva animación
+            // Botón de cierre
             IconButton(
                 onClick = { isClosing = true },
                 modifier = Modifier
@@ -87,6 +91,7 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // Título de la pantalla
                 Text(
                     text = "Inicio de sesión",
                     fontSize = 32.sp,
@@ -99,15 +104,23 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Image(
-                    painter = painterResource(id = R.drawable.logocirculo),
-                    contentDescription = "Logo",
-                    modifier = Modifier.size(100.dp),
-                    contentScale = ContentScale.Fit
-                )
+                // Logo animado
+                AnimatedVisibility(
+                    visible = true,
+                    enter = scaleIn(animationSpec = tween(durationMillis = 1000)) +
+                            fadeIn(animationSpec = tween(durationMillis = 1000))
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.logocirculo),
+                        contentDescription = "Logo",
+                        modifier = Modifier.size(100.dp),
+                        contentScale = ContentScale.Fit
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Contenedor de entrada
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -160,7 +173,7 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
                     onClick = {
                         when {
                             email.isBlank() ->
-                                errorMessage = "Introduzca su correo eletroónico, por favor."
+                                errorMessage = "Introduzca su correo electrónico, por favor."
                             !esEmailValido(email) ->
                                 errorMessage = "El correo ingresado es incorrecto, intente de nuevo, por favor."
                             password.isBlank() ->
@@ -193,12 +206,11 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 ) {
                     Text(
-                        text = "Iniciar sesión",
-                        fontSize = 25.sp,
+                        text = "Iniciar sesión", fontSize = 25.sp, fontWeight = FontWeight.SemiBold,
                         style = TextStyle(
-                            brush = Brush.horizontalGradient(listOf(Color(0xFF8A2BE2), Color(0xFF00BFFF)))
-                        ),
-                        fontWeight = FontWeight.SemiBold
+                            brush = Brush.horizontalGradient(listOf(Color(0xFF8A2BE2), Color(0xFF00BFFF))),
+                            fontFamily = Iansui
+                        )
                     )
                 }
 
@@ -235,21 +247,16 @@ fun LoginInputField(
     onValueChange: (String) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = label,
-            style = TextStyle(fontFamily = PoppinsNormal),
-            fontWeight = FontWeight.Bold,
-            fontSize = 22.sp,
-            color = Color(0xFF155DC0),
-            modifier = Modifier.padding(top = 10.dp)
-        )
+        Text(text = label, style = TextStyle(fontFamily = PoppinsNormal), fontWeight = FontWeight.SemiBold, fontSize = 22.sp, color = Color(0xFF1B72B3), modifier = Modifier.padding(top = 10.dp))
+
 
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 7.dp)
-                .background(Color(0x99FFFFFF), shape = RoundedCornerShape(10.dp))
-                .padding(horizontal = 8.dp, vertical = 2.dp)
+                .background(Color.White, shape = RoundedCornerShape(10.dp)) // Solo 1 fondo
+                .padding(horizontal = 8.dp, vertical = 2.dp) // Padding interno
+
         ) {
             BasicTextField(
                 value = value,

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.Dispatchers
@@ -94,6 +95,14 @@ class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
         userRepository.logoutUser() // Llamamos al repositorio para cerrar sesión en Firebase
         _userName.value = ""  // Limpiamos el nombre de usuario
     }
+    ///funcion para mandar correo
+    fun enviarCorreoRecuperacion(email: String, callback: (Boolean) -> Unit) {
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                callback(task.isSuccessful)
+            }
+    }
+
 
     fun fetchUserName() {
         userRepository.getCurrentUserName { name ->

@@ -100,7 +100,13 @@ fun RecuperarContrasena(navController: NavController, authViewModel: AuthViewMod
             Button(
                 onClick = {
                     if (email.isNotBlank()) {
-                        navController.navigate("modificarcontrasena")
+                        authViewModel.enviarCorreoRecuperacion(email) { success ->
+                            if (success) {
+                                navController.navigate("modificarcontrasena")
+                            } else {
+                                errorMessage = "No se pudo enviar el correo. Verifica tu dirección."
+                            }
+                        }
                     } else {
                         errorMessage = "Por favor, ingresa tu correo electrónico."
                     }
@@ -113,6 +119,7 @@ fun RecuperarContrasena(navController: NavController, authViewModel: AuthViewMod
             ) {
                 Text(text = "Recuperar", fontSize = 18.sp, color = Color(0xFF6C63FF))
             }
+
         }
     }
 }

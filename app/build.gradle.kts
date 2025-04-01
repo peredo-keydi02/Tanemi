@@ -71,6 +71,10 @@ dependencies {
     implementation ("com.google.firebase:firebase-auth-ktx:22.1.2")
     implementation ("at.favre.lib:bcrypt:0.9.0")
 
+    //Traductor
+    implementation ("com.google.mlkit:translate:17.0.3")
+    implementation ("com.google.mlkit:language-id:16.0.0")
+
     //Material design
     implementation("androidx.compose.material3:material3:1.2.0")
 
