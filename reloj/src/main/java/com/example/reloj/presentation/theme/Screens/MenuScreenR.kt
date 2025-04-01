@@ -1,5 +1,6 @@
 package com.example.reloj.presentation.theme.Screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -53,6 +55,10 @@ fun MenuScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
         authViewModelR.fetchUserName()
     }
 
+
+    // Obtener el contexto de Compose
+    val context = LocalContext.current
+
     Scaffold(
         timeText = { TimeText() },
         vignette = { Vignette(vignettePosition = VignettePosition.TopAndBottom) },
@@ -68,7 +74,6 @@ fun MenuScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
                 contentScale = ContentScale.Crop
             )
 
- keydi-reloj
             //lloremos juntos
             IconButton(
                 onClick = {
@@ -170,7 +175,18 @@ fun MenuScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
 
                 item {
                     Button(
-                        onClick = { /* TODO: Vinculación Smartwatch */ },
+                        onClick = {
+                            authViewModelR.checkDeviceState(
+                                onSuccess = { message ->
+                                    // Mostrar el mensaje de que se ha vinculado al otro dispositivo
+                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                },
+                                onError = { error ->
+                                    // Mostrar el mensaje de que no se ha vinculado a otro dispositivo
+                                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                                }
+                            )
+                        },
                         shape = RoundedCornerShape(30.dp),
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent), // ✅ Corrección
                         modifier = Modifier
@@ -219,5 +235,5 @@ fun MenuScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
         }
     }
 }
- keydi-reloj
+
 

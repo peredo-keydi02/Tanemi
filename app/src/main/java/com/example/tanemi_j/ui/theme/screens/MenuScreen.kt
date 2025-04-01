@@ -2,6 +2,7 @@ package com.example.tanemi_j.ui.theme.screens
 
 import android.graphics.Paint.Align
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -23,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +47,8 @@ fun MenuScreen(navController: NavHostController, authViewModel: AuthViewModel) {
     LaunchedEffect(Unit) {
         authViewModel.fetchUserName() // Obtener el nombre al entrar en la pantalla
     }
+    // Obtener el contexto de Compose
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -157,19 +161,16 @@ fun MenuScreen(navController: NavHostController, authViewModel: AuthViewModel) {
 
             Button(
                 onClick = {
-                    fun getDeviceToken() {
-                        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-                            if (!task.isSuccessful) {
-                                Log.w("FCM", "Obtener token falló", task.exception)
-                                return@addOnCompleteListener
-                            }
-
-                            val token = task.result
-                            Log.d("FCM", "Token: $token")
-
-                            // Aquí puedes guardar el token en tu base de datos
+                    authViewModel.checkDeviceState(
+                        onSuccess = { message ->
+                            // Mostrar el mensaje de que se ha vinculado al otro dispositivo
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                        },
+                        onError = { error ->
+                            // Mostrar el mensaje de que no se ha vinculado a otro dispositivo
+                            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
                         }
-                    }
+                    )
                 },
                 shape = RoundedCornerShape(30.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
