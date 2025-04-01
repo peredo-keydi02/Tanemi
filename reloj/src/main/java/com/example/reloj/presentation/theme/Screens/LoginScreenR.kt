@@ -2,6 +2,7 @@ package com.example.reloj.presentation.theme.Screens
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
@@ -13,6 +14,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,6 +34,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
@@ -52,10 +56,11 @@ fun LoginScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
     var errorMessage by remember { mutableStateOf("") }
     var isClosing by remember { mutableStateOf(false) }
     val activity = LocalContext.current as? Activity
-    val listState = rememberScalingLazyListState() // Solución al error
+    val listState = rememberScalingLazyListState()
+    var showDialog by remember { mutableStateOf(false) }
 
- keydi-reloj
-    //lloremos juntos
+    // Recolecta el estado del StateFlow
+    val loginNotification = authViewModelR.loginNotification.collectAsState().value
 
     if (isClosing) {
         LaunchedEffect(Unit) {
@@ -127,7 +132,6 @@ fun LoginScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
                         }
                     }
 
-
                     item { Spacer(modifier = Modifier.height(8.dp)) }
 
                     if (errorMessage.isNotEmpty()) {
@@ -162,6 +166,10 @@ fun LoginScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
                                             authViewModelR.loginUser(
                                                 email,
                                                 password,
+                                                deviceState = 1,
+                                                deviceModel = "",
+                                                deviceState2 = 1,
+                                                deviceModel2 = "Reloj Tanemí",// <-- Asegúrate de pasar este parámetro
                                                 onSuccess = {
                                                     navController.navigate("menu") {
                                                         popUpTo("login") { inclusive = true }
@@ -185,7 +193,6 @@ fun LoginScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
                                 )
                             )
                         }
-
                     }
 
                     item {
@@ -208,6 +215,55 @@ fun LoginScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
                                 tint = Color(0xFF1C8ADB),
                                 modifier = Modifier.size(24.dp)
                             )
+                        }
+                    }
+                }
+            }
+
+            // Aquí colocamos el Dialog fuera del ScalingLazyColumn
+            if (loginNotification.isNotEmpty()) {
+                Dialog(
+                    onDismissRequest = { showDialog = false },
+                    properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(
+                            text = "Intento de inicio de sesión detectado",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            style = TextStyle(fontFamily = Iansui)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "El dispositivo ${loginNotification} está intentando iniciar sesión. ¿Desea permitirlo?",
+                            fontSize = 16.sp,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Botones para permitir o denegar
+                        Row(horizontalArrangement = Arrangement.Center) {
+                            Button(
+                                onClick = {
+                                    authViewModelR.authorizePendingDevice() // Permitir sesión
+                                    showDialog = false // Cerrar el modal
+                                }
+                            ) {
+                                Text("Permitir")
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Button(
+                                onClick = {
+                                    authViewModelR.rejectPendingDevice() // Rechazar sesión
+                                    showDialog = false // Cerrar el modal
+                                }
+                            ) {
+                                Text("Denegar")
+                            }
                         }
                     }
                 }

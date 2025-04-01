@@ -69,6 +69,15 @@ dependencies {
 
     implementation ("com.google.firebase:firebase-messaging:23.1.0")
     implementation ("androidx.work:work-runtime-ktx:2.8.1")
+
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("com.google.code.gson:gson:2.8.8")
+
+    implementation("androidx.core:core-ktx:1.12.0")
+
+    //Traductor
+    implementation ("com.google.mlkit:translate:17.0.3")
+    implementation ("com.google.mlkit:language-id:16.0.0")
     implementation(libs.androidx.core.ktx)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
