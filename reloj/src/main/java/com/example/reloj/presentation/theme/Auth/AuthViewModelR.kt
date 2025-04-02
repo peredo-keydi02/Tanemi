@@ -32,47 +32,58 @@ class AuthViewModelR(private val userR: UserR) : ViewModel() {
 
     private val _userName = MutableStateFlow<String>("")
     val userName: StateFlow<String> = _userName
-    fun loginUser(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
-
-    private val _loginNotification = MutableStateFlow("")
-    val loginNotification: StateFlow<String> = _loginNotification
-
     var originalText = mutableStateOf("")
     var translatedText = mutableStateOf("")
 
     /*fun loginUser(email: String, password: String, device: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
-        viewModelScope.launch {
-            userR.getUserDevice { currentDevice ->
-                if (currentDevice == null) {
-                    // No hay otro dispositivo, iniciar sesión normalmente
-                    userR.loginUser(email, password,
-                        onSuccess = {
-                            userR.setCurrentDevice(device)
-                            onSuccess()
-                        },
-                        onError = onError
-                    )
-                } else if (currentDevice != device) {
-                    // Ya hay un dispositivo registrado, solicitar autorización
-                    userR.setPendingDevice(device)
-                    _loginNotification.value = "El dispositivo $device está intentando iniciar sesión"
-                } else {
-                    // Mismo dispositivo, iniciar sesión normalmente
-                    userR.loginUser(email, password, onSuccess, onError)
-                }
+    viewModelScope.launch {
+        userR.getUserDevice { currentDevice ->
+            if (currentDevice == null) {
+                // No hay otro dispositivo, iniciar sesión normalmente
+                userR.loginUser(email, password,
+                    onSuccess = {
+                        userR.setCurrentDevice(device)
+                        onSuccess()
+                    },
+                    onError = onError
+                )
+            } else if (currentDevice != device) {
+                // Ya hay un dispositivo registrado, solicitar autorización
+                userR.setPendingDevice(device)
+                _loginNotification.value = "El dispositivo $device está intentando iniciar sesión"
+            } else {
+                // Mismo dispositivo, iniciar sesión normalmente
+                userR.loginUser(email, password, onSuccess, onError)
             }
         }
-    }*/
+    }
+}*/
+
+    fun fetchUserName() {
+        userR.getCurrentUserName { name ->
+            _userName.value = name ?: ""
+        }
+    }
 
 
     // Función para iniciar sesión y registrar el dispositivo
-    fun loginUser(email: String, password: String, deviceState2: Int, deviceModel2: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
-
+    // Función para iniciar sesión y registrar el dispositivo
+    fun loginUser(
+        email: String,
+        password: String,
+        deviceState2: Int,
+        deviceModel2: String,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
         userR.loginUser(email, password,
             onSuccess = {
                 _loginState.value = LoginResult.Success
-                fetchUserName()
-                userR.updateDeviceInfo(deviceState2, deviceModel2) // Guardar el estado del dispositivo y modelo
+                fetchUserName() // Cargar el nombre del usuario
+                userR.updateDeviceInfo(
+                    deviceState2,
+                    deviceModel2
+                ) // Guardar el estado del dispositivo y modelo
                 onSuccess()
             },
             onError = { error ->
@@ -81,6 +92,8 @@ class AuthViewModelR(private val userR: UserR) : ViewModel() {
             }
         )
     }
+
+
 
     // Función para verificar el estado del dispositivo y mostrar mensaje
     fun checkDeviceState(onSuccess: (String) -> Unit, onError: (String) -> Unit) {
@@ -98,11 +111,7 @@ class AuthViewModelR(private val userR: UserR) : ViewModel() {
         }
     }
 
-    fun fetchUserName() {
-        userR.getCurrentUserName { name ->
-            _userName.value = name ?: ""
-        }
-    }
+
 
     fun logoutUser() {
         userR.logoutUser()

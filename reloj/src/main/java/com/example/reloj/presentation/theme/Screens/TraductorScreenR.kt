@@ -75,7 +75,6 @@ fun TraductorScreenR(navController: NavController, authViewModelR: AuthViewModel
     val coroutineScope = rememberCoroutineScope()
 
 
-
     val listState = rememberScalingLazyListState()
 
 
@@ -220,11 +219,11 @@ fun TraductorScreenR(navController: NavController, authViewModelR: AuthViewModel
                 }
 
 
-                item{
+                item {
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
-                item{
+                item {
                     Text(text = " $translatedText", fontSize = 16.sp)
                 }
 
@@ -236,21 +235,34 @@ fun TraductorScreenR(navController: NavController, authViewModelR: AuthViewModel
                             coroutineScope.launch {
                                 try {
                                     Log.d("TraductorScreen", "Texto a traducir: ${inputText.text}")
-                                    translatedText = googleTranslate(inputText.text, "es", "en") // Traduce de español a inglés
+                                    translatedText = googleTranslate(
+                                        inputText.text,
+                                        "es",
+                                        "en"
+                                    ) // Traduce de español a inglés
                                     Log.d("TraductorScreen", "Texto traducido: $translatedText")
 
                                     // Guardar en la base de datos la traducción
-                                    authViewModelR.originalText.value = inputText.text // Guardar el texto original
-                                    authViewModelR.translatedText.value =translatedText
+                                    authViewModelR.originalText.value =
+                                        inputText.text // Guardar el texto original
+                                    authViewModelR.translatedText.value = translatedText
 
                                     authViewModelR.saveTranslation(
                                         onSuccess = {
                                             // Si la traducción se guarda correctamente, puedes agregar una notificación o mensaje
-                                            Toast.makeText(context, "Traducción guardada", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(
+                                                context,
+                                                "Traducción guardada",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
                                         },
                                         onError = { error ->
                                             // Si ocurre un error al guardar la traducción
-                                            Toast.makeText(context, "Error al guardar traducción: $error", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(
+                                                context,
+                                                "Error al guardar traducción: $error",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
                                         }
                                     )
 
@@ -282,8 +294,13 @@ fun TraductorScreenR(navController: NavController, authViewModelR: AuthViewModel
                             contentAlignment = Alignment.Center
                         )
                         {
-                            Text("Traducir", fontSize = 14.sp, color = Color.White, style = TextStyle(fontFamily = PoppinsBold),
-                                fontWeight = FontWeight.SemiBold)
+                            Text(
+                                "Traducir",
+                                fontSize = 14.sp,
+                                color = Color.White,
+                                style = TextStyle(fontFamily = PoppinsBold),
+                                fontWeight = FontWeight.SemiBold
+                            )
                         }
                     }
                 }
@@ -291,7 +308,7 @@ fun TraductorScreenR(navController: NavController, authViewModelR: AuthViewModel
                 item { Spacer(modifier = Modifier.height(8.dp)) }
 
                 item {
-                    IconButton(onClick = {navController.popBackStack() }) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             painter = painterResource(id = R.drawable.regresarblanco),
                             contentDescription = "regresar",
@@ -303,3 +320,4 @@ fun TraductorScreenR(navController: NavController, authViewModelR: AuthViewModel
             }
         }
     }
+}

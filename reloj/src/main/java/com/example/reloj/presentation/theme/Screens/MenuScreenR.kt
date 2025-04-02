@@ -49,15 +49,16 @@ import com.example.reloj.presentation.theme.PoppinsNormal
 @Composable
 fun MenuScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
     val userName by authViewModelR.userName.collectAsState()
-    val listState = rememberScalingLazyListState() 
+    val listState = rememberScalingLazyListState()
+
+    // Obtener el contexto de Compose
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         authViewModelR.fetchUserName()
     }
 
 
-    // Obtener el contexto de Compose
-    val context = LocalContext.current
 
     Scaffold(
         timeText = { TimeText() },
