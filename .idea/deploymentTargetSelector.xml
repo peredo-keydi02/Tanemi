@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="reloj">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-04-01T12:07:47.857165100Z">
+        <DropdownSelection timestamp="2025-04-01T18:00:31.436045100Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Usuario\.android\avd\Wear_OS_Large_Round_API_34.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Usuario\.android\avd\Pixel_9_API_33.avd" />
             </handle>
           </Target>
         </DropdownSelection>
@@ -23,7 +23,6 @@
           </Target>
         </DropdownSelection>
         <DialogSelection />
-
       </SelectionState>
     </selectionStates>
   </component>
