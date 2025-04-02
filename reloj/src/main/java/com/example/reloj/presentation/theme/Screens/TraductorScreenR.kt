@@ -303,4 +303,3 @@ fun TraductorScreenR(navController: NavController, authViewModelR: AuthViewModel
             }
         }
     }
-}

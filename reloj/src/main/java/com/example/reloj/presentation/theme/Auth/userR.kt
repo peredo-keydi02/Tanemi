@@ -38,10 +38,6 @@ class UserR(private val firebaseAuth: FirebaseAuth) {
             }
     }
 
-<<<<<<< HEAD
- //keydi-reloj
-    //lloremos juntos
-=======
     fun getUserDevice(onResult: (String?) -> Unit) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val ref = FirebaseDatabase.getInstance().getReference("users/$userId/currentDevice")
@@ -80,9 +76,6 @@ class UserR(private val firebaseAuth: FirebaseAuth) {
         FirebaseDatabase.getInstance().getReference("users/$userId/pendingDevice").removeValue()
     }
 
-
-
->>>>>>> 3fe22432e0212fa6671a8917903335553fe9ad9a
 
     fun getCurrentUserName(onResult: (String?) -> Unit) {
         val uid = firebaseAuth.currentUser?.uid
