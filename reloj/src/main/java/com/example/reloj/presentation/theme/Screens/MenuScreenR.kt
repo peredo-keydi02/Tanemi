@@ -68,7 +68,7 @@ fun MenuScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
                 contentScale = ContentScale.Crop
             )
 
- keydi-reloj
+ //keydi-reloj
             //lloremos juntos
             IconButton(
                 onClick = {
@@ -219,5 +219,5 @@ fun MenuScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
         }
     }
 }
- keydi-reloj
+
 

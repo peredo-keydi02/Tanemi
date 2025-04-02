@@ -25,7 +25,7 @@ class UserR(private val firebaseAuth: FirebaseAuth) {
             }
     }
 
- keydi-reloj
+ //keydi-reloj
     //lloremos juntos
 
     fun getCurrentUserName(onResult: (String?) -> Unit) {
