@@ -49,7 +49,7 @@ import com.example.reloj.presentation.theme.PoppinsNormal
 @Composable
 fun MenuScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
     val userName by authViewModelR.userName.collectAsState()
-    val listState = rememberScalingLazyListState() // ✅ Definir el estado de la lista
+    val listState = rememberScalingLazyListState() 
 
     LaunchedEffect(Unit) {
         authViewModelR.fetchUserName()
@@ -74,11 +74,6 @@ fun MenuScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
                 contentScale = ContentScale.Crop
             )
 
-<<<<<<< HEAD
-// keydi-reloj
-            //lloremos juntos
-=======
->>>>>>> 3fe22432e0212fa6671a8917903335553fe9ad9a
             IconButton(
                 onClick = {
                     authViewModelR.logoutUser()
@@ -239,9 +234,4 @@ fun MenuScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
         }
     }
 }
-<<<<<<< HEAD
- //keydi-reloj
-=======
-
->>>>>>> 3fe22432e0212fa6671a8917903335553fe9ad9a
 

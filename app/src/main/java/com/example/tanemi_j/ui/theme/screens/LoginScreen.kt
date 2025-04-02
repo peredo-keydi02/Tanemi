@@ -186,9 +186,7 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
                                     email = email,
                                     password = password,
                                     deviceState = 1,
-                                    deviceModel = "Telefono Tanemi",
-                                    deviceState2 = 0,
-                                    deviceModel2 = "",
+                                    deviceModel = "Telefono Tanemí",
                                     onSuccess = {
                                         navController.navigate("menu") {
                                             popUpTo("login") { inclusive = true }

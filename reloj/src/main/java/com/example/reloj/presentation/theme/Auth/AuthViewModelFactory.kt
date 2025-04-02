@@ -11,9 +11,3 @@ class AuthViewModelFactory(private val userR: UserR) : ViewModelProvider.Factory
             throw IllegalArgumentException("Modelo de clase desconocido")
         }
     }
-<<<<<<< HEAD
-//keydi-reloj
-}
-=======
->>>>>>> 3fe22432e0212fa6671a8917903335553fe9ad9a
-

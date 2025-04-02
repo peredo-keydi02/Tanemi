@@ -58,15 +58,8 @@ fun LoginScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
     val activity = LocalContext.current as? Activity
     val listState = rememberScalingLazyListState()
     var showDialog by remember { mutableStateOf(false) }
+    var showDialogC by remember { mutableStateOf(false) }
 
-<<<<<<< HEAD
- //keydi-reloj
-    //lloremos juntos
-=======
-
-    // Recolecta el estado del StateFlow
-    val loginNotification = authViewModelR.loginNotification.collectAsState().value
->>>>>>> 3fe22432e0212fa6671a8917903335553fe9ad9a
 
     if (isClosing) {
         LaunchedEffect(Unit) {
@@ -157,11 +150,11 @@ fun LoginScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
                             modifier = Modifier
                                 .padding(top = 15.dp)
                                 .height(30.dp)
-                                .fillMaxWidth(0.6f)
+                                .wrapContentSize()
                                 .border(
                                     width = 2.dp,
                                     brush = Brush.horizontalGradient(listOf(Color(0xFF8A2BE2), Color(0xFF00BFFF))), // Degradado
-                                    shape = RoundedCornerShape(50.dp) // Bordes redondeados
+                                    shape = RoundedCornerShape(50.dp)
                                 )
                                 .clickable {
                                     when {
@@ -172,10 +165,8 @@ fun LoginScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
                                             authViewModelR.loginUser(
                                                 email,
                                                 password,
-                                                deviceState = 1,
-                                                deviceModel = "",
                                                 deviceState2 = 1,
-                                                deviceModel2 = "Reloj Tanemí",// <-- Asegúrate de pasar este parámetro
+                                                deviceModel2 = "Reloj Tanemí",
                                                 onSuccess = {
                                                     navController.navigate("menu") {
                                                         popUpTo("login") { inclusive = true }
@@ -202,14 +193,126 @@ fun LoginScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
                     }
 
                     item {
-                        TextButton(onClick = { navController.navigate("recuperarcontrasena") }) {
-                            Text("¿Olvidaste tu contraseña?", fontSize = 12.sp, color = Color(0xFF1C8ADB), style = TextStyle(fontFamily = PoppinsNormal), fontWeight = FontWeight.Normal)
+                        TextButton(onClick = { showDialogC = true},
+                            modifier = Modifier.fillMaxWidth()) {
+                            Text("¿Olvidaste tu contraseña?", fontSize = 12.sp, color = Color(0xFF1C8ADB), style = TextStyle(fontFamily = PoppinsNormal), fontWeight = FontWeight.Normal,
+                                textAlign = TextAlign.Center)
+                        }
+
+                        if (showDialogC) {
+                            AlertDialog(
+                                onDismissRequest = { showDialogC = false },
+                                title = {
+                                    Text(
+                                        "Aviso",
+                                        fontSize = 18.sp,
+                                        style = TextStyle(
+                                            brush = Brush.horizontalGradient(
+                                                listOf(Color(0xFF8A2BE2), Color(0xFF00BFFF))
+                                            ),
+                                            fontFamily = Iansui
+                                        ),
+                                        textAlign = TextAlign.Center,
+                                        fontWeight = FontWeight.SemiBold,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(bottom = 4.dp)
+                                    )
+                                },
+                                text = {
+                                    Text(
+                                        "Instale Tanemí para cambiar la contraseña",
+                                        fontSize = 10.sp,
+                                        style = TextStyle(fontFamily = PoppinsNormal),
+                                        textAlign = TextAlign.Center,
+                                        fontWeight = FontWeight.Normal,
+                                        color = Color(0xFF1C8ADB),
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                },
+                                confirmButton = {
+                                    Button(
+                                        onClick = { showDialogC = false },
+                                        colors = androidx.wear.compose.material.ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
+                                        shape = RoundedCornerShape(25.dp)
+
+                                    ) {
+                                        Text(
+                                            "X",
+                                            style = TextStyle(
+                                                brush = Brush.horizontalGradient(
+                                                    listOf(Color(0xFF8A2BE2), Color(0xFF00BFFF))
+                                                ),
+                                                fontSize = 14.sp,
+                                                fontWeight = FontWeight.Bold
+                                            ),
+                                            modifier = Modifier.padding(4.dp) // Agrega padding manualmente
+                                        )
+                                    }
+                                }
+
+                            )
                         }
                     }
 
                     item {
-                        TextButton(onClick = { navController.navigate("registro") }) {
+                        TextButton(onClick = { showDialog = true }) {
                             Text("Registro", fontSize = 14.sp, color = Color(0xFF1C8ADB), style = TextStyle(fontFamily = PoppinsNormal), fontWeight = FontWeight.Normal)
+                        }
+
+                        if (showDialog) {
+                            AlertDialog(
+                                onDismissRequest = { showDialog = false },
+                                title = {
+                                    Text(
+                                        "Aviso",
+                                        fontSize = 18.sp,
+                                        style = TextStyle(
+                                            brush = Brush.horizontalGradient(
+                                                listOf(Color(0xFF8A2BE2), Color(0xFF00BFFF))
+                                            ),
+                                            fontFamily = Iansui
+                                        ),
+                                        textAlign = TextAlign.Center,
+                                        fontWeight = FontWeight.SemiBold,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(bottom = 4.dp)
+                                    )
+                                },
+                                text = {
+                                    Text(
+                                        "Instale Tanemí en su teléfono para ser parte de nuestra familia",
+                                        fontSize = 10.sp,
+                                        style = TextStyle(fontFamily = PoppinsNormal),
+                                        textAlign = TextAlign.Center,
+                                        fontWeight = FontWeight.Normal,
+                                        color = Color(0xFF1C8ADB),
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                },
+                                confirmButton = {
+                                    Button(
+                                        onClick = { showDialog = false },
+                                        colors = androidx.wear.compose.material.ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
+                                        shape = RoundedCornerShape(25.dp)
+
+                                    ) {
+                                        Text(
+                                            "X",
+                                            style = TextStyle(
+                                                brush = Brush.horizontalGradient(
+                                                    listOf(Color(0xFF8A2BE2), Color(0xFF00BFFF))
+                                                ),
+                                                fontSize = 14.sp,
+                                                fontWeight = FontWeight.Bold
+                                            ),
+                                            modifier = Modifier.padding(4.dp) // Agrega padding manualmente
+                                        )
+                                    }
+                                }
+
+                            )
                         }
                     }
 
@@ -221,55 +324,6 @@ fun LoginScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
                                 tint = Color(0xFF1C8ADB),
                                 modifier = Modifier.size(24.dp)
                             )
-                        }
-                    }
-                }
-            }
-
-            // Aquí colocamos el Dialog fuera del ScalingLazyColumn
-            if (loginNotification.isNotEmpty()) {
-                Dialog(
-                    onDismissRequest = { showDialog = false },
-                    properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Text(
-                            text = "Intento de inicio de sesión detectado",
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            style = TextStyle(fontFamily = Iansui)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "El dispositivo ${loginNotification} está intentando iniciar sesión. ¿Desea permitirlo?",
-                            fontSize = 16.sp,
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        // Botones para permitir o denegar
-                        Row(horizontalArrangement = Arrangement.Center) {
-                            Button(
-                                onClick = {
-                                    authViewModelR.authorizePendingDevice() // Permitir sesión
-                                    showDialog = false // Cerrar el modal
-                                }
-                            ) {
-                                Text("Permitir")
-                            }
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Button(
-                                onClick = {
-                                    authViewModelR.rejectPendingDevice() // Rechazar sesión
-                                    showDialog = false // Cerrar el modal
-                                }
-                            ) {
-                                Text("Denegar")
-                            }
                         }
                     }
                 }
@@ -306,7 +360,9 @@ fun LoginInputFieldWear(
                 onValueChange = onValueChange,
                 textStyle = TextStyle(fontSize = 12.sp, color = Color.Black),
                 visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
-                modifier = Modifier.fillMaxWidth().padding(4.dp)
+                modifier = Modifier.fillMaxWidth().padding(4.dp),
+                singleLine = true
+
             )
         }
     }
