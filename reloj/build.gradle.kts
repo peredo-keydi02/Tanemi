@@ -32,6 +32,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.2"
+    }
     kotlinOptions {
         jvmTarget = "11"
     }
@@ -69,7 +72,32 @@ dependencies {
 
     implementation ("com.google.firebase:firebase-messaging:23.1.0")
     implementation ("androidx.work:work-runtime-ktx:2.8.1")
+
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("com.google.code.gson:gson:2.8.8")
+
+    implementation("androidx.core:core-ktx:1.12.0")
+
+    //Traductor
+    implementation ("com.google.mlkit:translate:17.0.3")
+    implementation ("com.google.mlkit:language-id:16.0.0")
+
+    implementation("androidx.wear.compose:compose-material:1.2.0")
+    implementation("androidx.wear.compose:compose-foundation:1.2.0")
+
+    implementation ("com.google.mlkit:translate:17.0.2")
+
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.google.code.gson:gson:2.8.8")
+
+    implementation("org.jsoup:jsoup:1.14.3")
+
+
     implementation(libs.androidx.core.ktx)
+    implementation(libs.material3.android)
+    implementation(libs.material3.android)
+    implementation(libs.material3.android)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)

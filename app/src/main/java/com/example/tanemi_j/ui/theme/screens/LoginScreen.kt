@@ -2,6 +2,7 @@ package com.example.tanemi_j.ui.theme.screens
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.os.Build
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -35,7 +36,7 @@ import com.example.tanemi_j.ui.theme.Iansui
 import com.example.tanemi_j.ui.theme.PoppinsNormal
 import kotlinx.coroutines.delay
 
-@SuppressLint("ContextCastToActivity")
+@SuppressLint("ContextCastToActivity", "StateFlowValueCalledInComposition")
 @Composable
 fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) {
     var email by remember { mutableStateOf("") }
@@ -182,8 +183,10 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
                                 errorMessage = "Debe aceptar los términos y condiciones."
                             else -> {
                                 authViewModel.loginUser(
-                                    email,
-                                    password,
+                                    email = email,
+                                    password = password,
+                                    deviceState = 1,
+                                    deviceModel = "Telefono Tanemí",
                                     onSuccess = {
                                         navController.navigate("menu") {
                                             popUpTo("login") { inclusive = true }

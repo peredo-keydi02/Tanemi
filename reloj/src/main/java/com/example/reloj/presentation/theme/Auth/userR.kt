@@ -1,8 +1,21 @@
 package com.example.reloj.presentation.theme.Auth
 
+import android.util.Log
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.gson.Gson
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
+import java.io.IOException
 
 class UserR(private val firebaseAuth: FirebaseAuth) {
 
@@ -25,8 +38,44 @@ class UserR(private val firebaseAuth: FirebaseAuth) {
             }
     }
 
- //keydi-reloj
-    //lloremos juntos
+    fun getUserDevice(onResult: (String?) -> Unit) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val ref = FirebaseDatabase.getInstance().getReference("users/$userId/currentDevice")
+
+        ref.get().addOnSuccessListener { snapshot ->
+            onResult(snapshot.value as? String)
+        }
+    }
+
+    fun setCurrentDevice(device: String) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        FirebaseDatabase.getInstance().getReference("users/$userId/currentDevice").setValue(device)
+    }
+
+    fun setPendingDevice(device: String) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        FirebaseDatabase.getInstance().getReference("users/$userId/pendingDevice").setValue(device)
+    }
+
+    fun approvePendingDevice(onResult: (String) -> Unit) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val ref = FirebaseDatabase.getInstance().getReference("users/$userId")
+
+        ref.child("pendingDevice").get().addOnSuccessListener { snapshot ->
+            val approvedDevice = snapshot.value as? String
+            if (approvedDevice != null) {
+                ref.child("currentDevice").setValue(approvedDevice)
+                ref.child("pendingDevice").removeValue()
+                onResult(approvedDevice)
+            }
+        }
+    }
+
+    fun rejectPendingDevice() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        FirebaseDatabase.getInstance().getReference("users/$userId/pendingDevice").removeValue()
+    }
+
 
     fun getCurrentUserName(onResult: (String?) -> Unit) {
         val uid = firebaseAuth.currentUser?.uid
@@ -41,6 +90,33 @@ class UserR(private val firebaseAuth: FirebaseAuth) {
             onResult(null) // Usuario no autenticado
         }
     }
+
+    fun updateDeviceInfo(deviceState2: Int, deviceModel2: String) {
+        val uid = firebaseAuth.currentUser?.uid ?: return
+        db.child("users").child(uid).child("deviceState2").setValue(deviceState2)
+        db.child("users").child(uid).child("deviceModel2").setValue(deviceModel2)
+    }
+
+    // Función para verificar el estado del dispositivo
+    fun checkDeviceState(onSuccess: (String) -> Unit, onError: (String) -> Unit) {
+        val uid = firebaseAuth.currentUser?.uid ?: return
+        db.child("users").child(uid).child("deviceState").get().addOnSuccessListener { snapshot ->
+            val deviceState = snapshot.getValue(Int::class.java) ?: 0
+            val deviceModel = snapshot.child("deviceModel").getValue(String::class.java) ?: ""
+
+            if (deviceState == 1) {
+                onSuccess("Se ha vinculado al dispositivo $deviceModel")
+            } else {
+                onError("No se ha encontrado ningún dispositivo")
+            }
+        }.addOnFailureListener {
+            onError("Error al obtener la información del dispositivo")
+        }
+    }
+
+
+
+
 
     // Función para cerrar sesión
     fun logoutUser() {

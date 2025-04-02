@@ -4,7 +4,19 @@ import android.util.Log
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.gson.Gson
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
+import java.io.IOException
 
 class UserRepository(private val firebaseAuth: FirebaseAuth) {
 
@@ -38,22 +50,29 @@ class UserRepository(private val firebaseAuth: FirebaseAuth) {
             }
     }
 
-    fun saveUserToken(token: String) {
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        currentUser?.let {
-            // Suponiendo que tienes una estructura en la base de datos como /users/{userId}/fcmToken
-            val userId = it.uid
-            db.child("users").child(userId).child("fcmToken").setValue(token)
-                .addOnSuccessListener {
-                    Log.d("UserRepository", "Token guardado exitosamente")
-                }
-                .addOnFailureListener { exception ->
-                    Log.w("UserRepository", "Error al guardar token: ${exception.message}")
-                }
-        }
+
+    fun updateDeviceInfo(deviceState: Int, deviceModel: String) {
+        val uid = firebaseAuth.currentUser?.uid ?: return
+        db.child("users").child(uid).child("deviceState").setValue(deviceState)
+        db.child("users").child(uid).child("deviceModel").setValue(deviceModel)
     }
 
+    // Función para verificar el estado del dispositivo
+    fun checkDeviceState(onSuccess: (String) -> Unit, onError: (String) -> Unit) {
+        val uid = firebaseAuth.currentUser?.uid ?: return
+        db.child("users").child(uid).child("deviceState2").get().addOnSuccessListener { snapshot ->
+            val deviceState2 = snapshot.getValue(Int::class.java) ?: 0
+            val deviceModel2 = snapshot.child("deviceModel2").getValue(String::class.java) ?: ""
 
+            if (deviceState2 == 1) {
+                onSuccess("Se ha vinculado al dispositivo $deviceModel2")
+            } else {
+                onError("No se ha encontrado ningún dispositivo")
+            }
+        }.addOnFailureListener {
+            onError("Error al obtener la información del dispositivo")
+        }
+    }
     //  Función para verificar la contraseña encriptada manualmente
     fun verificarContraseña(contraseñaIngresada: String, contraseñaAlmacenada: String): Boolean {
         val resultado = BCrypt.verifyer().verify(contraseñaIngresada.toCharArray(), contraseñaAlmacenada)
@@ -109,6 +128,8 @@ class UserRepository(private val firebaseAuth: FirebaseAuth) {
             onError("No se ha logeado")
         }
     }
+
+
 
 }
 

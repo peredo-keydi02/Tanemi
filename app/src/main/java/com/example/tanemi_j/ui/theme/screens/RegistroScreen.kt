@@ -159,7 +159,7 @@ fun RegistroScreen(navController: NavHostController, viewModel: AuthViewModel) {
                                     fontFamily = Iansui
                                 ),
                                 textAlign = TextAlign.Center,
-                                modifier = Modifier.fillMaxWidth().padding(bottom = 15.dp)// Color del texto
+                                modifier = Modifier.fillMaxWidth().padding(bottom = 15.dp)
                             )
                         },
                         text = {
@@ -177,7 +177,7 @@ fun RegistroScreen(navController: NavHostController, viewModel: AuthViewModel) {
                             Button(
                                 onClick = {
                                     showDialog = false
-                                    navController.navigate("login") // Redirige al login
+                                    navController.navigate("login")
                                 },
                                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent), // Fondo azul
                                 modifier = Modifier

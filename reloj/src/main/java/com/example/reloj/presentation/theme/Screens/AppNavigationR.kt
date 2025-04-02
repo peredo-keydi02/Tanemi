@@ -9,9 +9,6 @@ import com.example.reloj.presentation.theme.Auth.AuthViewModelR
 @Composable
 fun AppNavigationR(authViewModelR: AuthViewModelR) {
     val navController = rememberNavController()
-
- //keydi-reloj
-    //lloremos juntos
     NavHost(navController, startDestination = "login") {
         composable("login") { LoginScreenR(navController, authViewModelR) }
         composable("menu") { MenuScreenR(navController, authViewModelR) }

@@ -28,16 +28,45 @@ class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
     private val _userName = MutableStateFlow<String>("")
     val userName: StateFlow<String> = _userName
 
+    private val _loginNotification = MutableStateFlow("")
+    val loginNotification: StateFlow<String> = _loginNotification
+
     var originalText = mutableStateOf("")
     var translatedText = mutableStateOf("")
 
     private val _currentUser = MutableStateFlow(userRepository.getCurrentUser())
     val currentUser: StateFlow<FirebaseUser?> = _currentUser
 
+
     // Agregamos el parámetro "name" para registrarlo en la base de datos
     fun registerUser(email: String, password: String, name: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
         userRepository.registerUser(email, password, name, onSuccess, onError)
     }
+
+    // Función para iniciar sesión y registrar el dispositivo
+    fun loginUser(email: String, password: String, deviceState: Int, deviceModel: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        userRepository.loginUser(email, password,
+            onSuccess = {
+                _loginState.value = LoginResult.Success
+                fetchUserName() // Cargar el nombre del usuario
+                userRepository.updateDeviceInfo(deviceState, deviceModel) // Guardar el estado del dispositivo y modelo
+                onSuccess()
+            },
+            onError = { error ->
+                _loginState.value = LoginResult.Error(error)
+                onError(error)
+            }
+        )
+    }
+
+    // Función para verificar el estado del dispositivo y mostrar mensaje
+    fun checkDeviceState(onSuccess: (String) -> Unit, onError: (String) -> Unit) {
+        userRepository.checkDeviceState(onSuccess, onError)
+    }
+
+
+
+
 
     /*fun loginUser(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
         userRepository.loginUser(email, password,
@@ -52,44 +81,6 @@ class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
             }
         )
     }*/
-
-
-    fun loginUser(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
-        userRepository.loginUser(email, password,
-            onSuccess = {
-                _loginState.value = LoginResult.Success
-                fetchUserName()
-                // Aquí llamamos para obtener el token FCM y guardarlo
-                getDeviceTokenAndSave()
-                onSuccess()
-            },
-            onError = { error ->
-                _loginState.value = LoginResult.Error(error)
-                onError(error)
-            }
-        )
-    }
-    // Nueva función para obtener el token FCM y guardarlo
-    private fun getDeviceTokenAndSave() {
-        viewModelScope.launch {
-            try {
-                // Obtener el token de FCM
-                val token = FirebaseMessaging.getInstance().token.await()  // Usamos coroutines para obtener el token de manera asincrónica
-                saveTokenToDatabase(token)
-            } catch (e: Exception) {
-                Log.w("FCM", "Error al obtener token FCM: ${e.message}")
-            }
-        }
-    }
-
-    // Función para guardar el token en la base de datos
-    private suspend fun saveTokenToDatabase(token: String) {
-        withContext(Dispatchers.IO) {
-            // Guardar el token utilizando el repositorio
-            userRepository.saveUserToken(token)
-        }
-    }
-
     // Función para cerrar sesión
     fun logoutUser() {
         userRepository.logoutUser() // Llamamos al repositorio para cerrar sesión en Firebase
@@ -126,4 +117,6 @@ class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
             onError("Ambos campos deben estar llenos")
         }
     }
+
+
 }
