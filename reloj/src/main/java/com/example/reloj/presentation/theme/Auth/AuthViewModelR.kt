@@ -32,13 +32,6 @@ class AuthViewModelR(private val userR: UserR) : ViewModel() {
 
     private val _userName = MutableStateFlow<String>("")
     val userName: StateFlow<String> = _userName
-<<<<<<< HEAD
- //keydi-reloj
-    //lloremos juntos
-=======
-
-
->>>>>>> 3fe22432e0212fa6671a8917903335553fe9ad9a
     fun loginUser(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
 
     private val _loginNotification = MutableStateFlow("")
@@ -70,30 +63,16 @@ class AuthViewModelR(private val userR: UserR) : ViewModel() {
             }
         }
     }*/
-    fun authorizePendingDevice() {
-        viewModelScope.launch {
-            userR.approvePendingDevice { approvedDevice ->
-                _loginNotification.value = ""
-                _loginState.value = LoginResult.Success
-            }
-        }
-    }
 
-    fun rejectPendingDevice() {
-        viewModelScope.launch {
-            userR.rejectPendingDevice()
-            _loginNotification.value = "Intento de inicio de sesión denegado."
-        }
-    }
 
     // Función para iniciar sesión y registrar el dispositivo
-    fun loginUser(email: String, password: String, deviceState: Int, deviceModel: String, deviceState2: Int, deviceModel2: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+    fun loginUser(email: String, password: String, deviceState2: Int, deviceModel2: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
 
         userR.loginUser(email, password,
             onSuccess = {
                 _loginState.value = LoginResult.Success
                 fetchUserName()
-                userR.updateDeviceInfo(deviceState, deviceModel, deviceState2, deviceModel2) // Guardar el estado del dispositivo y modelo
+                userR.updateDeviceInfo(deviceState2, deviceModel2) // Guardar el estado del dispositivo y modelo
                 onSuccess()
             },
             onError = { error ->
@@ -127,14 +106,6 @@ class AuthViewModelR(private val userR: UserR) : ViewModel() {
 
     fun logoutUser() {
         userR.logoutUser()
-    }
-
-    fun triggerTestNotification() {
-        _loginNotification.value = "Se inició sesión en otro dispositivo"
-    }
-
-    fun clearNotification() {
-        _loginNotification.value = ""
     }
 
     fun fetchUser() {

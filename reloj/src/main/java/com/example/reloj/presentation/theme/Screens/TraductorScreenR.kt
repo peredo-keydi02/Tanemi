@@ -1,8 +1,9 @@
 package com.example.reloj.presentation.theme.Screens
 
 import android.app.Activity
-import android.content.Intent
 import android.speech.RecognizerIntent
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
@@ -35,14 +36,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -52,29 +57,27 @@ import androidx.wear.compose.material.VignettePosition
 import com.example.reloj.presentation.theme.Auth.AuthViewModelR
 import com.example.reloj.presentation.theme.Iansui
 import com.example.reloj.presentation.theme.PoppinsBold
-import com.example.reloj.presentation.theme.services.AudioRecorder
-import java.util.Locale
+import com.example.reloj.presentation.theme.PoppinsNormal
+import com.example.reloj.presentation.theme.services.TextToSpeechHelper
+import com.example.reloj.presentation.theme.services.googleTranslate
+import kotlinx.coroutines.launch
+
+
 
 @Composable
 fun TraductorScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
     var inputText by remember { mutableStateOf(TextFieldValue("")) }
     var translatedText by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
-    val recorder = remember { AudioRecorder() }
-    var isRecording by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
+
 
     val listState = rememberScalingLazyListState()
 
-    val speechRecognizerLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data = result.data
-                val spokenText = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.get(0)
-                if (spokenText != null) {
-                    inputText = TextFieldValue(spokenText)
-                }
-            }
-        }
 
     Scaffold(
         timeText = { TimeText() },
@@ -105,7 +108,7 @@ fun TraductorScreenR(navController: NavController, authViewModelR: AuthViewModel
             }
 
             ScalingLazyColumn(
-                state = listState, // ✅ Estado agregado
+                state = listState,
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -129,12 +132,7 @@ fun TraductorScreenR(navController: NavController, authViewModelR: AuthViewModel
                             .clip(CircleShape)
                             .background(Color.White.copy(alpha = 0.2f))
                             .clickable {
-                                val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-                                    putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-                                    putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-                                    putExtra(RecognizerIntent.EXTRA_PROMPT, "Di algo...")
-                                }
-                                speechRecognizerLauncher.launch(intent)
+                                showDialog = true
                             },
                         contentAlignment = Alignment.Center
                     ) {
@@ -144,6 +142,90 @@ fun TraductorScreenR(navController: NavController, authViewModelR: AuthViewModel
                             modifier = Modifier.size(40.dp)
                         )
                     }
+                    if (showDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showDialog = false },
+                            title = {
+                                Text(
+                                    "Aviso",
+                                    fontSize = 18.sp,
+                                    style = TextStyle(
+                                        brush = Brush.horizontalGradient(
+                                            listOf(Color(0xFF8A2BE2), Color(0xFF00BFFF))
+                                        ),
+                                        fontFamily = Iansui
+                                    ),
+                                    textAlign = TextAlign.Center,
+                                    fontWeight = FontWeight.SemiBold,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = 4.dp)
+                                )
+                            },
+                            text = {
+                                Text(
+                                    "Debido a que soy un emulador, no tengo soporte de audio, sin embargo, sigo siendo tu traductor de confianza.",
+                                    fontSize = 10.sp,
+                                    style = TextStyle(fontFamily = PoppinsNormal),
+                                    textAlign = TextAlign.Center,
+                                    fontWeight = FontWeight.Normal,
+                                    color = Color(0xFF1C8ADB),
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            },
+                            confirmButton = {
+                                Button(
+                                    onClick = { showDialog = false },
+                                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
+                                    shape = RoundedCornerShape(25.dp)
+
+                                ) {
+                                    Text(
+                                        "X",
+                                        style = TextStyle(
+                                            brush = Brush.horizontalGradient(
+                                                listOf(Color(0xFF8A2BE2), Color(0xFF00BFFF))
+                                            ),
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.Bold
+                                        ),
+                                        modifier = Modifier.padding(4.dp) // Agrega padding manualmente
+                                    )
+                                }
+                            }
+
+                        )
+                    }
+
+                }
+
+
+                item {
+                    BasicTextField(
+                        value = inputText,
+                        onValueChange = { inputText = it },
+                        singleLine = true,
+                        textStyle = androidx.compose.ui.text.TextStyle(color = Color.White),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                    ) { innerTextField ->
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            if (inputText.text.isEmpty()) {
+                                Text(text = "Ingresa texto", color = Color.Gray)
+                            }
+                            innerTextField()
+                        }
+                    }
+                }
+
+
+                item{
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
+                item{
+                    Text(text = " $translatedText", fontSize = 16.sp)
                 }
 
                 item { Spacer(modifier = Modifier.height(16.dp)) }
@@ -151,14 +233,33 @@ fun TraductorScreenR(navController: NavController, authViewModelR: AuthViewModel
                 item {
                     Button(
                         onClick = {
-                            if (isRecording) {
-                            recorder.stopRecording()
-                            isRecording = false
-                        } else {
-                            recorder.startRecording()
-                            isRecording = true
-                        }
+                            coroutineScope.launch {
+                                try {
+                                    Log.d("TraductorScreen", "Texto a traducir: ${inputText.text}")
+                                    translatedText = googleTranslate(inputText.text, "es", "en") // Traduce de español a inglés
+                                    Log.d("TraductorScreen", "Texto traducido: $translatedText")
 
+                                    // Guardar en la base de datos la traducción
+                                    authViewModelR.originalText.value = inputText.text // Guardar el texto original
+                                    authViewModelR.translatedText.value =translatedText
+
+                                    authViewModelR.saveTranslation(
+                                        onSuccess = {
+                                            // Si la traducción se guarda correctamente, puedes agregar una notificación o mensaje
+                                            Toast.makeText(context, "Traducción guardada", Toast.LENGTH_SHORT).show()
+                                        },
+                                        onError = { error ->
+                                            // Si ocurre un error al guardar la traducción
+                                            Toast.makeText(context, "Error al guardar traducción: $error", Toast.LENGTH_SHORT).show()
+                                        }
+                                    )
+
+                                    TextToSpeechHelper(context).speak(translatedText)
+                                } catch (e: Exception) {
+                                    Log.e("TraductorScreen", "Error en la traducción: ${e.message}")
+                                    errorMessage = "Error en la traducción"
+                                }
+                            }
                         },
                         shape = RoundedCornerShape(30.dp),
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent), // ✅ Corrección
@@ -187,28 +288,6 @@ fun TraductorScreenR(navController: NavController, authViewModelR: AuthViewModel
                     }
                 }
 
-                if (translatedText.isNotEmpty()) {
-                    item {
-                        Text(
-                            text = translatedText,
-                            fontSize = 12.sp,
-                            color = Color.White,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-
-                if (errorMessage.isNotEmpty()) {
-                    item {
-                        Text(
-                            text = errorMessage,
-                            fontSize = 12.sp,
-                            color = Color.Red,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-
                 item { Spacer(modifier = Modifier.height(8.dp)) }
 
                 item {
@@ -225,12 +304,3 @@ fun TraductorScreenR(navController: NavController, authViewModelR: AuthViewModel
         }
     }
 }
-<<<<<<< HEAD
-//keydi-reloj
-
-fun cambios(){
-
-}
-=======
->>>>>>> 3fe22432e0212fa6671a8917903335553fe9ad9a
-

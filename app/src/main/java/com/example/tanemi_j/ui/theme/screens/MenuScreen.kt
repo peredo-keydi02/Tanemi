@@ -163,11 +163,9 @@ fun MenuScreen(navController: NavHostController, authViewModel: AuthViewModel) {
                 onClick = {
                     authViewModel.checkDeviceState(
                         onSuccess = { message ->
-                            // Mostrar el mensaje de que se ha vinculado al otro dispositivo
                             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                         },
                         onError = { error ->
-                            // Mostrar el mensaje de que no se ha vinculado a otro dispositivo
                             Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
                         }
                     )

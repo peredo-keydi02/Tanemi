@@ -98,10 +98,8 @@ class UserR(private val firebaseAuth: FirebaseAuth) {
         }
     }
 
-    fun updateDeviceInfo(deviceState: Int, deviceModel: String, deviceState2: Int, deviceModel2: String) {
+    fun updateDeviceInfo(deviceState2: Int, deviceModel2: String) {
         val uid = firebaseAuth.currentUser?.uid ?: return
-        db.child("users").child(uid).child("deviceState").setValue(deviceState)
-        db.child("users").child(uid).child("deviceModel").setValue(deviceModel)
         db.child("users").child(uid).child("deviceState2").setValue(deviceState2)
         db.child("users").child(uid).child("deviceModel2").setValue(deviceModel2)
     }
@@ -116,7 +114,7 @@ class UserR(private val firebaseAuth: FirebaseAuth) {
             if (deviceState == 1) {
                 onSuccess("Se ha vinculado al dispositivo $deviceModel")
             } else {
-                onError("No ha iniciado sesión en ningún otro dispositivo")
+                onError("No se ha encontrado ningún dispositivo")
             }
         }.addOnFailureListener {
             onError("Error al obtener la información del dispositivo")
