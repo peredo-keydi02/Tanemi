@@ -52,6 +52,7 @@ import androidx.wear.compose.material.VignettePosition
 import com.example.reloj.presentation.theme.Auth.AuthViewModelR
 import com.example.reloj.presentation.theme.Iansui
 import com.example.reloj.presentation.theme.PoppinsBold
+import com.example.reloj.presentation.theme.services.AudioRecorder
 import java.util.Locale
 
 @Composable
@@ -59,6 +60,8 @@ fun TraductorScreenR(navController: NavController, authViewModelR: AuthViewModel
     var inputText by remember { mutableStateOf(TextFieldValue("")) }
     var translatedText by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
+    val recorder = remember { AudioRecorder() }
+    var isRecording by remember { mutableStateOf(false) }
 
     val listState = rememberScalingLazyListState()
 
@@ -147,14 +150,15 @@ fun TraductorScreenR(navController: NavController, authViewModelR: AuthViewModel
 
                 item {
                     Button(
-                        onClick = {/*
-                            if (inputText.text.isNotBlank()) {
-                                authViewModelR.originalText.value = inputText.text
-                                translatedText = "Traducción: ${inputText.text}"
-                                authViewModelR.translatedText.value = translatedText
-                            } else {
-                                errorMessage = "Ingresa una palabra"
-                            }*/
+                        onClick = {
+                            if (isRecording) {
+                            recorder.stopRecording()
+                            isRecording = false
+                        } else {
+                            recorder.startRecording()
+                            isRecording = true
+                        }
+
                         },
                         shape = RoundedCornerShape(30.dp),
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent), // ✅ Corrección

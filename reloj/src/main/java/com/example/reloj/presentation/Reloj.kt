@@ -5,6 +5,7 @@
 
 package com.example.reloj.presentation
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -31,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -60,6 +62,14 @@ class Reloj : ComponentActivity() {
             val userR = UserR(FirebaseAuth.getInstance())
             val authViewModelFactory = AuthViewModelFactory(userR)
             val authViewModelR = ViewModelProvider(this, authViewModelFactory).get(AuthViewModelR::class.java)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                    1001
+                )
+            }
 
             // Aquí usas el ViewModel como lo necesites
             AppNavigationR(authViewModelR)

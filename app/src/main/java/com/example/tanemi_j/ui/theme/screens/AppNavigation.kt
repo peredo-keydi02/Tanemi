@@ -21,6 +21,6 @@ fun AppNavigation(authViewModel: AuthViewModel, textToSpeech: TextToSpeech) {
         composable("menu") { MenuScreen(navController, authViewModel) }
         composable("traductor") { TraductorScreen(navController, authViewModel, textToSpeech) }
         composable("recuperarcontrasena") { RecuperarContrasena(navController, authViewModel) }
-        composable("modificarcontrasena") { ModificarContrasenaScreen(navController, authViewModel) }
+         }
     }
-}
+

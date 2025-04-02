@@ -12,4 +12,3 @@ class AuthViewModelFactory(private val userR: UserR) : ViewModelProvider.Factory
         }
     }
 
-}
