@@ -54,8 +54,7 @@ fun LoginScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
     val activity = LocalContext.current as? Activity
     val listState = rememberScalingLazyListState() // Solución al error
 
- keydi-reloj
-    //lloremos juntos
+
 
     if (isClosing) {
         LaunchedEffect(Unit) {
