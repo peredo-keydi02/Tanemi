@@ -4,6 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="reloj">
         <option name="selectionMode" value="DROPDOWN" />
+
         <DropdownSelection timestamp="2025-04-02T06:00:25.393496600Z">
           <Target type="DEFAULT_BOOT">
             <handle>
@@ -12,9 +13,11 @@
           </Target>
         </DropdownSelection>
         <DialogSelection />
+
       </SelectionState>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
+
         <DropdownSelection timestamp="2025-04-02T10:16:33.650529800Z">
           <Target type="DEFAULT_BOOT">
             <handle>
@@ -23,6 +26,7 @@
           </Target>
         </DropdownSelection>
         <DialogSelection />
+
       </SelectionState>
     </selectionStates>
   </component>

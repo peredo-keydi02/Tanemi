@@ -11,5 +11,5 @@ class AuthViewModelFactory(private val userR: UserR) : ViewModelProvider.Factory
             throw IllegalArgumentException("Modelo de clase desconocido")
         }
     }
-}
+
 

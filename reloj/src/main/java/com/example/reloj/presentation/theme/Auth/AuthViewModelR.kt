@@ -32,6 +32,10 @@ class AuthViewModelR(private val userR: UserR) : ViewModel() {
 
     private val _userName = MutableStateFlow<String>("")
     val userName: StateFlow<String> = _userName
+    fun loginUser(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+
+    private val _loginNotification = MutableStateFlow("")
+    val loginNotification: StateFlow<String> = _loginNotification
 
     var originalText = mutableStateOf("")
     var translatedText = mutableStateOf("")
