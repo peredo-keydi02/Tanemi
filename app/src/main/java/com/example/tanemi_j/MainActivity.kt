@@ -1,12 +1,14 @@
 package com.example.tanemi_j
 
 import android.content.ContentValues.TAG
+import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.tanemi_j.ui.theme.auth.AuthViewModel
 import com.example.tanemi_j.ui.theme.auth.AuthViewModelFactory
@@ -35,6 +37,14 @@ class MainActivity : ComponentActivity() {
 
         // Establecer el contenido y pasar textToSpeech a AppNavigation
         setContent {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                    1001
+                )
+            }
+
             AppNavigation(authViewModel = authViewModel, textToSpeech = textToSpeech)
         }
 

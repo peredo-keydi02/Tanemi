@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -47,6 +48,7 @@ fun TraductorScreen(navController: NavHostController, authViewModel: AuthViewMod
     var errorMessage by remember { mutableStateOf("") }
     var detectedLanguage by remember { mutableStateOf("Español") }
     var targetLanguageText by remember { mutableStateOf("Inglés") }
+    val context = LocalContext.current
 
     // Estado para alternar entre español e inglés
     val isSpanish = remember { mutableStateOf(true) }
@@ -153,71 +155,7 @@ fun TraductorScreen(navController: NavHostController, authViewModel: AuthViewMod
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            ElevatedButton(
-                onClick = {
-                    if (inputText.text.isNotBlank()) {
-                        translator.translate(inputText.text)
-                            .addOnSuccessListener { translated ->
-                                translatedText = translated
-                                val language = if (isSpanish.value) Locale.US else Locale("es", "ES")
-                                textToSpeech.language = language
-                                textToSpeech.speak(translated, TextToSpeech.QUEUE_FLUSH, null, null)
-                            }
-                            .addOnFailureListener { exception ->
-                                errorMessage = "Error al traducir: ${exception.message}"
-                            }
-                    } else {
-                        errorMessage = "Ingresa una palabra para traducir"
-                    }
-                },
-                //colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF8A2BE2)),
-                //shape = RoundedCornerShape(30.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(65.dp)
-                    .background(
-                        brush = Brush.horizontalGradient(
-                            colors = listOf(
-                                Color(0xFF8C52FF),
-                                Color(0xFF5CE1E6)
-                            )
-                        ),
-                        shape = RoundedCornerShape(25.dp)
-                    ),
 
-                ) {
-                Text("Traducir",fontSize = 23.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    style = TextStyle(fontFamily = PoppinsBold),
-                    color = Color.White)
-            }
-
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            if (translatedText.isNotEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .padding(top = 16.dp)
-                        .background(Color.Gray.copy(alpha = 0.3f), shape = RoundedCornerShape(10.dp))
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        text = "Traducción: $translatedText",
-                        fontSize = 18.sp,
-                        color = Color.White
-                    )
-                }
-            }
-
-            if (errorMessage.isNotEmpty()) {
-                Text(
-                    text = errorMessage,
-                    fontSize = 18.sp,
-                    color = Color.Red
-                )
-            }
 
             Text(
                 text = "Idioma de entrada: $detectedLanguage",
@@ -243,7 +181,85 @@ fun TraductorScreen(navController: NavHostController, authViewModel: AuthViewMod
                     .padding(horizontal = 32.dp)
                     .clip(RoundedCornerShape(16.dp))
             ) {
-                Text("Cambiar idioma", fontSize = 18.sp)
+                Text("Cambiar idioma", fontSize = 18.sp, style = TextStyle(fontFamily = PoppinsBold))
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            ElevatedButton(
+                onClick = {
+                    if (inputText.text.isNotBlank()) {
+                        translator.translate(inputText.text)
+                            .addOnSuccessListener { translated ->
+                                translatedText = translated
+
+                                // Guardar en la base de datos la traducción
+                                authViewModel.originalText.value = inputText.text // Guardar el texto original
+                                authViewModel.translatedText.value = translated // Guardar el texto traducido
+
+                                // Llamar a la función para guardar la traducción
+                                authViewModel.saveTranslation(
+                                    onSuccess = {
+                                        // Si la traducción se guarda correctamente, puedes agregar una notificación o mensaje
+                                        Toast.makeText(context, "Traducción guardada", Toast.LENGTH_SHORT).show()
+                                    },
+                                    onError = { error ->
+                                        // Si ocurre un error al guardar la traducción
+                                        Toast.makeText(context, "Error al guardar traducción: $error", Toast.LENGTH_SHORT).show()
+                                    }
+                                )
+
+                                val language = if (isSpanish.value) Locale.US else Locale("es", "ES")
+                                textToSpeech.language = language
+                                textToSpeech.speak(translated, TextToSpeech.QUEUE_FLUSH, null, null)
+                            }
+                            .addOnFailureListener { exception ->
+                                errorMessage = "Error al traducir: ${exception.message}"
+                            }
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(
+                                Color(0xFF8C52FF),
+                                Color(0xFF5CE1E6)
+                            )
+                        ),
+                        shape = RoundedCornerShape(50.dp)
+                    ),
+            ) {
+                Text("Traducir", fontSize = 26.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    style = TextStyle(fontFamily = PoppinsBold),
+                    color = Color.White)
+            }
+
+
+            if (translatedText.isNotEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .background(Color.Gray.copy(alpha = 0.3f), shape = RoundedCornerShape(10.dp))
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text = "Traducción: $translatedText",
+                        fontSize = 18.sp,
+                        color = Color.White
+                    )
+                }
+            }
+
+            if (errorMessage.isNotEmpty()) {
+                Text(
+                    text = errorMessage,
+                    fontSize = 18.sp,
+                    color = Color.Red
+                )
             }
         }
     }
