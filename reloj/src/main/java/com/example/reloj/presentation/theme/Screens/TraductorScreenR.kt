@@ -221,7 +221,7 @@ fun TraductorScreenR(navController: NavController, authViewModelR: AuthViewModel
         }
     }
 }
-keydi-reloj
+//keydi-reloj
 
 fun cambios(){
 

@@ -24,7 +24,7 @@ class AuthViewModelR(private val userR: UserR) : ViewModel() {
 
     private val _userName = MutableStateFlow<String>("")
     val userName: StateFlow<String> = _userName
- keydi-reloj
+ //keydi-reloj
     //lloremos juntos
     fun loginUser(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
         userR.loginUser(email, password,
