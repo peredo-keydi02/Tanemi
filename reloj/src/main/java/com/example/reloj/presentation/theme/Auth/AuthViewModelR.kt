@@ -33,6 +33,9 @@ class AuthViewModelR(private val userR: UserR) : ViewModel() {
     private val _userName = MutableStateFlow<String>("")
     val userName: StateFlow<String> = _userName
 
+
+    fun loginUser(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+
     private val _loginNotification = MutableStateFlow("")
     val loginNotification: StateFlow<String> = _loginNotification
 
@@ -80,6 +83,7 @@ class AuthViewModelR(private val userR: UserR) : ViewModel() {
 
     // Función para iniciar sesión y registrar el dispositivo
     fun loginUser(email: String, password: String, deviceState: Int, deviceModel: String, deviceState2: Int, deviceModel2: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+
         userR.loginUser(email, password,
             onSuccess = {
                 _loginState.value = LoginResult.Success

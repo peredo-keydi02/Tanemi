@@ -63,7 +63,7 @@ fun TraductorScreenR(navController: NavController, authViewModelR: AuthViewModel
     val recorder = remember { AudioRecorder() }
     var isRecording by remember { mutableStateOf(false) }
 
-    val listState = rememberScalingLazyListState() // ✅ Estado del scroll
+    val listState = rememberScalingLazyListState()
 
     val speechRecognizerLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
@@ -78,8 +78,8 @@ fun TraductorScreenR(navController: NavController, authViewModelR: AuthViewModel
 
     Scaffold(
         timeText = { TimeText() },
-        vignette = { Vignette(vignettePosition = VignettePosition.TopAndBottom) }, // ✅ Corrección
-        positionIndicator = { PositionIndicator(scalingLazyListState = listState) } // ✅ Corrección
+        vignette = { Vignette(vignettePosition = VignettePosition.TopAndBottom) },
+        positionIndicator = { PositionIndicator(scalingLazyListState = listState) }
     ) {
         Box(
             modifier = Modifier.fillMaxSize()

@@ -74,7 +74,6 @@ fun MenuScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
                 contentScale = ContentScale.Crop
             )
 
-            //lloremos juntos
             IconButton(
                 onClick = {
                     authViewModelR.logoutUser()

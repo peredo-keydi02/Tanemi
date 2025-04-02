@@ -77,7 +77,7 @@ class UserR(private val firebaseAuth: FirebaseAuth) {
     }
 
 
-    //lloremos juntos
+
 
     fun getCurrentUserName(onResult: (String?) -> Unit) {
         val uid = firebaseAuth.currentUser?.uid

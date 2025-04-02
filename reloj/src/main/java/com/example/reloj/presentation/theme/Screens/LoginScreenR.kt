@@ -59,6 +59,7 @@ fun LoginScreenR(navController: NavController, authViewModelR: AuthViewModelR) {
     val listState = rememberScalingLazyListState()
     var showDialog by remember { mutableStateOf(false) }
 
+
     // Recolecta el estado del StateFlow
     val loginNotification = authViewModelR.loginNotification.collectAsState().value
 
